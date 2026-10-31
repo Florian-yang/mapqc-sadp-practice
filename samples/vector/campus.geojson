@@ -1,0 +1,8 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {"type": "Feature", "properties": {"name": "示例建筑"}, "geometry": {"type": "Polygon", "coordinates": [[[0, 0], [30, 0], [30, 20], [0, 20], [0, 0]]]}},
+    {"type": "Feature", "properties": {"name": "示例道路"}, "geometry": {"type": "LineString", "coordinates": [[-10, 25], [40, 25]]}},
+    {"type": "Feature", "properties": {"name": "检查点"}, "geometry": {"type": "Point", "coordinates": [15, 10]}}
+  ]
+}

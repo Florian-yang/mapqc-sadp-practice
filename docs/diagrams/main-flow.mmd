@@ -1,0 +1,20 @@
+flowchart LR
+    user[质检员]
+    subgraph system[地图数据质量检查工具 计划用例]
+        open[打开地图或文本]
+        view[查看数据并选择位置]
+        record[登记错误并自动编号]
+        save[保存错误记录]
+        reopen[重新打开错误记录]
+        query[关键字查询与定位]
+    end
+    user --> open
+    user --> view
+    user --> record
+    user --> save
+    user --> reopen
+    user --> query
+    open --> view
+    view --> record
+    record --> save
+    reopen --> query

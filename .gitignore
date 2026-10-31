@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+build/
+dist/
+dist-debug/
+evidence/local/
+.env
+.env.*
+!.env.example
+*.log
+*.exe

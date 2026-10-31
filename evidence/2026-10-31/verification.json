@@ -1,0 +1,63 @@
+{
+  "verified_at": "2026-10-31T16:27:47+08:00",
+  "version": "0.1.0",
+  "python": "3.13.7",
+  "os": "Windows-11-10.0.26200-SP0",
+  "dependencies": {
+    "PySide6": "6.11.2",
+    "PyInstaller": "6.22.3"
+  },
+  "checks": [
+    {
+      "name": "source_offscreen_window",
+      "status": "passed",
+      "exit_code": 0,
+      "platform": "offscreen",
+      "window_size": [
+        900,
+        580
+      ],
+      "screenshot": "evidence/2026-10-31/source-window.png"
+    },
+    {
+      "name": "packaged_offscreen_window",
+      "status": "passed",
+      "exit_code": 0,
+      "platform": "offscreen",
+      "window_size": [
+        900,
+        580
+      ],
+      "screenshot": "evidence/2026-10-31/packaged-window.png"
+    },
+    {
+      "name": "small_sample_integrity",
+      "status": "passed",
+      "scope": "sample JSON and text presence; not an application loader test"
+    }
+  ],
+  "build": {
+    "status": "passed",
+    "path": "dist/MapQCPractice/MapQCPractice.exe",
+    "exe_sha256": "440a2debd2ebe9cc9632dca1dc1cc11d13753efe8cacbfc9eeeeaac455902d65",
+    "exe_bytes": 1773241,
+    "directory_bytes": 113388776
+  },
+  "resolved_issues": [
+    {
+      "symptom": "The first windowed package timed out; the console diagnostic reported QtCore DLL import failure.",
+      "cause": "PyInstaller collected Poppler ICU 78 from the inherited PATH; Qt expected the Windows ICU API.",
+      "fix": "Build with a process-local Python and Windows PATH and a fresh project-local analysis directory."
+    },
+    {
+      "symptom": "After dependency repair, the window was created but the diagnostic process did not exit successfully.",
+      "cause": "The frozen executable inherited a cp1252 output encoding and failed while printing a Chinese JSON value.",
+      "fix": "Keep the result file UTF-8 and emit ASCII-escaped JSON to the console."
+    }
+  ],
+  "limits": [
+    "Offscreen source and packaged window creation only; normal desktop interaction is not verified.",
+    "Map loading, annotation, persistence and query are not implemented in v0.1.0.",
+    "No claim of non-Windows packaging validation."
+  ]
+}
