@@ -4,6 +4,8 @@
 
 当前版本 **v0.1.0**：已有需求与验收清单、用例图、最小窗口和打包脚本。地图读取、错误登记与查询尚未实现。
 
+设计里程碑 **v0.2.0** 在11/2补做：已比较架构方案，形成目标结构图、构件职责、接口及质量权衡，并按用例走查。此标签标记设计材料，应用及已有运行包仍为v0.1.0。
+
 ## 运行与验证
 
 使用Python 3.13，安装`requirements.txt`后运行：
@@ -23,6 +25,7 @@ powershell -File scripts/build.ps1 -PythonPath C:/path/to/python.exe
 - [课程要求对应表](docs/course-checklist.md)：课件和报告需要的证据。
 - [逐日计划](docs/plan.md)：10月31日至11月9日的任务。
 - [用例图](docs/diagrams/use-cases.svg)：计划支持的用户操作。
+- [架构设计](docs/architecture.md)、[设计走查](docs/design-walkthrough.md)：目标构件、接口与后续验证安排。
 - [环境与验证](docs/environment.md)、[每日执行配置](docs/automation.md)。
 - [日记](docs/diary/index.md)、[第8周材料](docs/weekly/week08.md)。
 - [报告工作副本](reports/README.md)：保留老师模板，图文和周材料按计划合并。

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1420" height="1120" viewBox="0 0 1420 1120">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#364352"/></marker></defs>
+<rect width="1420" height="1120" fill="white"/>
+<text x="710" y="49" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="34" font-weight="700" fill="#202a36">MapQC 离线桌面目标结构</text>
+<text x="710" y="85" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#546578">按职责分层，以MVC组织显示、输入与当前业务状态</text>
+<rect x="25" y="110" width="1370" height="935" rx="12" fill="none" stroke="#7c8b99" stroke-width="2" stroke-dasharray="9 6"/>
+<text x="55" y="143" text-anchor="start" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#202a36">一台PC · 单进程 · 无网络依赖</text>
+<rect x="60" y="170" width="1280" height="120" rx="9" fill="#f2f5f8" stroke="#596b7c" stroke-width="2"/>
+<text x="700.0" y="222.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="700" fill="#202a36">表现层 V · MainWindow / MapView / TextView</text>
+<text x="700.0" y="255.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400" fill="#202a36">显示与选点 · ErrorForm / QueryView收集输入，不负责编号或读写错误文件</text>
+<rect x="60" y="390" width="480" height="150" rx="9" fill="#f2f5f8" stroke="#596b7c" stroke-width="2"/>
+<text x="300.0" y="440.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="700" fill="#202a36">应用协调 C · AppController</text>
+<text x="300.0" y="473.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400" fill="#202a36">调用用例，成功后更新会话</text>
+<text x="300.0" y="506.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400" fill="#202a36">Qt信号通知视图刷新</text>
+<rect x="690" y="390" width="650" height="150" rx="9" fill="#eef5f1" stroke="#596b7c" stroke-width="2"/>
+<text x="1015.0" y="424.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="700" fill="#202a36">领域模型 M 与查询规则</text>
+<text x="1015.0" y="457.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400" fill="#202a36">PracticeSession / MapDocument</text>
+<text x="1015.0" y="490.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400" fill="#202a36">Location / ErrorRecord / ErrorSearchService</text>
+<text x="1015.0" y="523.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400" fill="#202a36">不依赖Qt或具体文件实现</text>
+<rect x="60" y="700" width="600" height="140" rx="9" fill="#f2f5f8" stroke="#596b7c" stroke-width="2"/>
+<text x="360.0" y="745.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="700" fill="#202a36">格式加载 · LoaderRegistry / MapLoader</text>
+<text x="360.0" y="778.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400" fill="#202a36">GeoJsonLoader / TextLoader（11/2）</text>
+<text x="360.0" y="811.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400" fill="#202a36">PNG加载器扩展（11/7）</text>
+<rect x="740" y="700" width="600" height="140" rx="9" fill="#f2f5f8" stroke="#596b7c" stroke-width="2"/>
+<text x="1040.0" y="745.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="700" fill="#202a36">错误仓储 · ErrorRepository</text>
+<text x="1040.0" y="778.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400" fill="#202a36">JsonErrorRepository（11/5）</text>
+<text x="1040.0" y="811.5" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="24" font-weight="400" fill="#202a36">临时文件写成功后替换原文件</text>
+<rect x="60" y="940" width="600" height="65" rx="9" fill="#fff" stroke="#596b7c" stroke-width="2"/>
+<text x="360.0" y="981.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="700" fill="#202a36">本机地图文件 · GeoJSON / 文本 / PNG</text>
+<rect x="740" y="940" width="600" height="65" rx="9" fill="#fff" stroke="#596b7c" stroke-width="2"/>
+<text x="1040.0" y="981.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="26" font-weight="700" fill="#202a36">本机错误记录 · JSON</text>
+<polyline points="180,290 180,390" fill="none" stroke="#364352" stroke-width="2.7"/>
+<polygon points="180,390 189.0,372.0 171.0,372.0" fill="#364352"/>
+<text x="250" y="345" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#202a36">操作</text>
+<polyline points="420,390 420,290" fill="none" stroke="#364352" stroke-width="2.7" stroke-dasharray="9 6"/>
+<polygon points="420,290 411.0,308.0 429.0,308.0" fill="#364352"/>
+<text x="555" y="345" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#202a36">状态 / 错误通知</text>
+<polyline points="540,465 690,465" fill="none" stroke="#364352" stroke-width="2.7"/>
+<polygon points="690,465 672.0,456.0 672.0,474.0" fill="#364352"/>
+<text x="615" y="446" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400" fill="#202a36">读写 / 查询</text>
+<polyline points="240,540 240,700" fill="none" stroke="#364352" stroke-width="2.7"/>
+<polygon points="240,700 249.0,682.0 231.0,682.0" fill="#364352"/>
+<text x="325" y="635" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#202a36">加载地图</text>
+<polyline points="460,540 460,620 1040,620 1040,700" fill="none" stroke="#364352" stroke-width="2.7"/>
+<polygon points="1040,700 1049.0,682.0 1031.0,682.0" fill="#364352"/>
+<text x="790" y="606" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#202a36">读取 / 保存错误</text>
+<polyline points="360,840 360,940" fill="none" stroke="#364352" stroke-width="2.7"/>
+<polygon points="360,940 369.0,922.0 351.0,922.0" fill="#364352"/>
+<text x="420" y="902" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#202a36">读取</text>
+<polyline points="1040,840 1040,940" fill="none" stroke="#364352" stroke-width="2.7"/>
+<polygon points="1040,940 1049.0,922.0 1031.0,922.0" fill="#364352"/>
+<text x="1115" y="902" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="23" font-weight="400" fill="#202a36">读 / 写</text>
+<text x="710" y="1032" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400" fill="#546578">文件访问构件使用领域数据类型；领域无反向依赖</text>
+<text x="710" y="1080" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400" fill="#546578">实线：运行时调用   虚线箭头：状态通知   虚线框：本机部署范围</text>
+<text x="710" y="1110" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="21" font-weight="400" fill="#546578">v0.2为设计里程碑；目标构件按后续计划实现，应用仍为v0.1窗口骨架</text>
+</svg>

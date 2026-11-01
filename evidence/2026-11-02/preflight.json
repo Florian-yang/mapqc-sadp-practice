@@ -1,0 +1,22 @@
+{
+  "checked_at": "2026-11-02T05:34:40+08:00",
+  "observed_trigger_utc": "2026-11-01T21:26:12.314000+00:00",
+  "observed_trigger_local": "2026-11-02T05:26:12.314000+08:00",
+  "head_before_recovery": "aff65d6e7536c9a2cab9e8e1be98b8cab8c12219",
+  "remote_main_before_recovery": "aff65d6e7536c9a2cab9e8e1be98b8cab8c12219",
+  "head_matches_remote": true,
+  "application_blobs_unchanged": {
+    "main.py": "c913fb7333f6fefa68b5131b057602630d795682",
+    "mapqc_practice/__init__.py": "25256bf1b23779ab9f5ddbd0eb7e847f7d6a9f5b",
+    "mapqc_practice/__main__.py": "f0d96ecc0e1db05d9a83e5e2ff4d9bff400295d4",
+    "mapqc_practice/app.py": "d9fc78b2923e6b2b52431d00cca5688f1e44c381",
+    "requirements.txt": "1c61c66c5c1431de865ed0cd2322cc57709e60ba",
+    "scripts/build.ps1": "23987959e40dfd9c85411e23a7fbe35e9b61c0c3"
+  },
+  "previous_runtime_evidence_and_exe_hash_consistent": true,
+  "application_exe_sha256": "440a2debd2ebe9cc9632dca1dc1cc11d13753efe8cacbfc9eeeeaac455902d65",
+  "recovery_of_planned_date": "2026-11-01",
+  "actual_recovery_date": "2026-11-02",
+  "reason": "No v0.2 design artifacts or commit at preflight; trigger still arrived in the morning after TZID change. Exact cause of the missing evening result is unknown.",
+  "today_new_milestone": "v0.3 deferred to the evening; no models, loaders or weekly Excel aggregation performed in this morning run"
+}
