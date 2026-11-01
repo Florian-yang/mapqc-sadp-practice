@@ -1,0 +1,11 @@
+{
+  "verified_at": "2026-11-02T05:35:43+08:00",
+  "design_commit": "3c87b64225b25698174f1f7f852bf4f74d3f776e",
+  "remote_main_at_verification": "3c87b64225b25698174f1f7f852bf4f74d3f776e",
+  "annotated_tag": "v0.2.0",
+  "tag_object": "6c7d17366807e1b405c99fbd1bc10737c2631b7b",
+  "remote_tag_target": "3c87b64225b25698174f1f7f852bf4f74d3f776e",
+  "push_verified": true,
+  "scope": "Design milestone for the Nov 1 plan, actually completed Nov 2. Application remains v0.1.0.",
+  "receipt_commit": "This record is committed after the verified design push; verify final branch HEAD against remote after pushing it."
+}
