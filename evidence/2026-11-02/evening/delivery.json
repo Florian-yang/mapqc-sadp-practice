@@ -1,0 +1,11 @@
+{
+  "date_beijing": "2026-11-02",
+  "implementation_commit": "6575040e2cb7b36b756d8d636f93553310ac4be6",
+  "remote_main_at_verification": "6575040e2cb7b36b756d8d636f93553310ac4be6",
+  "tag": "v0.3.0",
+  "tag_object": "3fe97857cf39e955357c88f6859f8f67edf3502a",
+  "remote_tag_target": "6575040e2cb7b36b756d8d636f93553310ac4be6",
+  "push_verified": true,
+  "scope": "Source milestone; models and loaders accepted, existing executable unchanged at v0.1.0.",
+  "receipt": "This receipt and diary commit link follow the implementation push. Final branch HEAD is checked again after pushing this receipt."
+}
