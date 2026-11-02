@@ -1,0 +1,11 @@
+{
+  "actual_time": "2026-11-02T21:37:55.329087+08:00",
+  "trigger_utc": "2026-11-02T13:34:24.960Z",
+  "trigger_beijing": "2026-11-02T21:34:24.960+08:00",
+  "schedule": "within evening tolerance; current-day task permitted",
+  "plan_date": "2026-11-02",
+  "command": "python -X utf8 -m unittest discover -s tests -v",
+  "exit_code": 0,
+  "tests_run": 9,
+  "scope": "domain models, GeoJSON and UTF-8 text loaders; no UI integration, registration, repository or search acceptance"
+}

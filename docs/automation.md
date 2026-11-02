@@ -31,3 +31,7 @@ GitHub仓库：<https://github.com/Florian-yang/mapqc-sadp-practice>，私有。
 本次清晨仅补做缺失的11/1架构任务；11/2的模型、加载和周汇总留待晚间。完整触发换算、配置复核和恢复范围见`evidence/2026-11-02/schedule-check.json`。
 
 本地计划需要电脑开机且应用运行，官方说明见[Scheduled tasks](https://learn.chatgpt.com/docs/automations)。该说明没有给出本次时区解析偏差的具体原因。
+
+## 11月2日晚间实际核对
+
+本次触发为UTC 13:34:24，对应北京时间21:34:24，处于允许的数分钟偏差内。按11/2计划执行模型、加载与周汇总；本次触发说明修订在此次生效，不保证以后所有运行都准时。

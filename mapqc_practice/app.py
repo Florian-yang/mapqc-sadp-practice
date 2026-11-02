@@ -1,4 +1,4 @@
-"""v0.1仅验证程序启动和打包，业务功能按逐日计划加入。"""
+"""窗口尚为骨架；v0.3的模型与加载器独立验证，后续接入界面。"""
 from __future__ import annotations
 
 import argparse
@@ -52,7 +52,7 @@ def main(argv: list[str] | None = None) -> int:
     message.setStyleSheet("background:#f5f5f5; border:1px solid #dddddd; color:#555555;")
     layout.addWidget(message, 1)
     window.setCentralWidget(surface)
-    window.statusBar().showMessage("v0.1 · 启动与打包验证")
+    window.statusBar().showMessage("v0.3 · 模型与加载已独立验证，界面待连接")
     window.show()
 
     if args.smoke_test:
@@ -65,7 +65,7 @@ def main(argv: list[str] | None = None) -> int:
                   "window_title": window.windowTitle(),
                   "window_size": [window.width(), window.height()],
                   "platform": app.platformName(),
-                  "scope": "offscreen window creation and event processing; business functions are not implemented"}
+                  "scope": "offscreen window creation and event processing; UI integration is not implemented; loaders tested separately"}
         if args.result:
             args.result.parent.mkdir(parents=True, exist_ok=True)
             args.result.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

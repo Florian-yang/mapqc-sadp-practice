@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "version": "0.3.0",
+  "window_title": "MapQC 综合实践 v0.3.0",
+  "window_size": [
+    900,
+    580
+  ],
+  "platform": "offscreen",
+  "scope": "offscreen window creation and event processing; UI integration is not implemented; loaders tested separately"
+}

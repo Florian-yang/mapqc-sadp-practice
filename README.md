@@ -2,9 +2,9 @@
 
 软件体系结构与设计模式课程的地图数据质检工具。从需求、架构和项目骨架开始，按日实现并记录验证结果。
 
-当前版本 **v0.1.0**：已有需求与验收清单、用例图、最小窗口和打包脚本。地图读取、错误登记与查询尚未实现。
+当前源码版本 **v0.3.0**：核心模型及GeoJSON、文本加载已完成，九项无窗口测试通过。窗口仍为骨架，尚未连接加载功能；登记、保存和查询待后续实现。已有运行包仍为v0.1.0。
 
-设计里程碑 **v0.2.0** 在11/2补做：已比较架构方案，形成目标结构图、构件职责、接口及质量权衡，并按用例走查。此标签标记设计材料，应用及已有运行包仍为v0.1.0。
+设计里程碑 **v0.2.0** 在11/2补做：已比较架构方案，形成目标结构图、构件职责、接口及质量权衡，并按用例走查。此标签标记当时的设计材料；11/2晚间源码推进到v0.3.0。
 
 ## 运行与验证
 
@@ -12,6 +12,7 @@
 
 ```powershell
 python -m mapqc_practice
+python -m unittest discover -s tests -v
 python -m mapqc_practice --smoke-test --result evidence/local/source-smoke.json
 powershell -File scripts/build.ps1 -PythonPath C:/path/to/python.exe
 ```

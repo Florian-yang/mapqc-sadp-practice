@@ -1,0 +1,14 @@
+test_course_text (test_loaders.LoadingTests.test_course_text) ... ok
+test_course_vector (test_loaders.LoadingTests.test_course_vector) ... ok
+test_invalid_geometries (test_loaders.LoadingTests.test_invalid_geometries) ... ok
+test_invalid_json_shapes (test_loaders.LoadingTests.test_invalid_json_shapes) ... ok
+test_locations_and_record (test_loaders.LoadingTests.test_locations_and_record) ... ok
+test_missing_encoding_and_suffix (test_loaders.LoadingTests.test_missing_encoding_and_suffix) ... ok
+test_multigeometries_null_and_empty (test_loaders.LoadingTests.test_multigeometries_null_and_empty) ... ok
+test_strategy_injection_and_no_qt_dependency (test_loaders.LoadingTests.test_strategy_injection_and_no_qt_dependency) ... ok
+test_text_bom_newlines_empty (test_loaders.LoadingTests.test_text_bom_newlines_empty) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.171s
+
+OK
