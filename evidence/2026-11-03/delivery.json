@@ -1,0 +1,13 @@
+{
+  "date_beijing": "2026-11-03",
+  "implementation_commit": "c4615bc6dd48a246501cb969173de146d19f9105",
+  "remote_main_at_verification": "c4615bc6dd48a246501cb969173de146d19f9105",
+  "tag": "v0.4.0",
+  "tag_object": "353165d4997d6db160d9c8ab92f8a6af6043ded9",
+  "remote_tag_target": "c4615bc6dd48a246501cb969173de146d19f9105",
+  "push_verified": true,
+  "github_description_updated": true,
+  "repository_private": true,
+  "scope": "Requirements correction and locally tested account/WeChat integration code. No real WeChat authorization/binding acceptance or public deployment.",
+  "receipt": "Diary and this receipt follow verified implementation push. Final receipt commit is checked against remote after pushing."
+}
