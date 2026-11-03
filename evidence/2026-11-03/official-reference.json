@@ -1,0 +1,13 @@
+{
+  "url": "https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html",
+  "retrieved": "2026-11-03",
+  "method": "HTTPS urllib request, gzip decoding, HTML text extraction",
+  "status": 200,
+  "checked": [
+    "approved website application and WeChat login permission required",
+    "scope=snsapi_login; callback domain matches approval",
+    "server exchanges authorization code; state and session recommended",
+    "official qrconnect and sns/oauth2/access_token URLs"
+  ],
+  "not_claimed": "Current account eligibility, exact fees or approval lead times were not established."
+}

@@ -1,0 +1,22 @@
+{
+  "verified_at": "2026-11-03T20:58:17.613792+08:00",
+  "source_version": "0.4.0",
+  "tests_passed": 20,
+  "legacy_loader_tests": 9,
+  "new_auth_tests": 11,
+  "scope": "Local account registration/login; injected WeChat code exchange, state expiry/replay/browser binding, identity uniqueness, session/logout and actual local HTTP round trips.",
+  "real_wechat_login": "not verified: no platform application or approved callback domain",
+  "real_wechat_binding": "not verified for same reason",
+  "public_deployment": "not deployed",
+  "wechat_platform_requirements": "User confirmed absent on 2026-11-03",
+  "browser": "Local login page read through browser accessibility and screenshot; shows WeChat pending configuration.",
+  "source_sha256": {
+    "check_collect/auth.py": "8ed9fb05a46f69abf983a371ec2c12d48f31790bd315b3cc610fadddfaf2acd1",
+    "check_collect/server.py": "83d9ead840927ea8b55765af91a8718003ed8b80035ff54ce8f5fbda5a9fbe63",
+    "docs/assignment-original.md": "30bd7b0dfb8fe3474070140d07ff38ea83b77a502ac77dbf956ef44e0de3b2bf",
+    "docs/plan.json": "d239d00c42a4dd7628633592a71186cf3106c8de427f728d3616dc3cbdd6ede9",
+    "docs/requirements.md": "99e3904e0de5120d363a1d8b34ff3d865027d9c07a24af41da08c859d755de64",
+    "docs/wechat-setup.md": "83c3b98e687e44f4f70a69ad8c13b41f6f69df5c753d2c0746d662fd89a35aae"
+  },
+  "future_modules": "POI capture/review/chat/disputes/maps/OCR/middleware not implemented today"
+}

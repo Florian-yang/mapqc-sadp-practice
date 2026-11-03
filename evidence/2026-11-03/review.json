@@ -1,0 +1,8 @@
+{
+  "reviewer": "independent check_collect_prose_review",
+  "scope": "Read-only requirement, plan, setup, diary, entry and report review",
+  "finding": "Report target behavior used present tense; could look implemented.",
+  "resolution": "Changed heading to target functionality and body to planned behavior; actual implementation separately stated.",
+  "requirement_coverage": "Reviewer found original requirements represented in R01-R21.",
+  "writing": "humanizer-zh applied; no authorship or detector claims"
+}

@@ -1,0 +1,22 @@
+@startuml
+actor 用户
+participant 浏览器
+participant "HTTP控制器" as HTTP
+participant "认证服务/仓储" as Auth
+participant "微信平台" as WX
+用户 -> 浏览器 : 点击登录或绑定
+浏览器 -> HTTP : POST /auth/wechat/login 或 bind
+HTTP -> Auth : 生成随机state，绑定浏览器；绑定时验证会话
+HTTP --> 浏览器 : HttpOnly校验cookie + 微信授权URL
+浏览器 -> WX : 请求官方二维码
+用户 -> WX : 扫码确认
+WX --> 浏览器 : 回调地址 + code + state
+浏览器 -> HTTP : GET /auth/wechat/callback
+HTTP -> Auth : 消费一次性state并核对cookie/绑定会话
+HTTP -> WX : 服务端用code交换凭据
+WX --> HTTP : openid与访问凭据
+HTTP -> Auth : 按appid/openid关联账号，禁止跨账号覆盖
+Auth --> HTTP : 新会话
+HTTP --> 浏览器 : 会话cookie + 跳回首页
+note over HTTP,WX : 真实微信段待配置应用/域名后联调；本地协议测试不能代替扫码验收
+@enduml

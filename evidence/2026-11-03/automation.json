@@ -1,0 +1,10 @@
+{
+  "id": "mapqc-11-9",
+  "status": "ACTIVE",
+  "target_thread": "01a176f3-6546-7191-82ce-8fbd94262c58",
+  "schedule": "21:30 Asia/Shanghai; original UTC 13:30 rule preserved",
+  "prompt_sha256": "d65de36a947f113e6aaba31b1b1e881df32bc2135d7e7f38f4063cae34bb3e94",
+  "new_deadline": "2026-11-11T22:30:00+08:00",
+  "scope_updated": true,
+  "notification_policy": "failed_runs_only"
+}
