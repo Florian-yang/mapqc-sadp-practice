@@ -1,0 +1,35 @@
+{
+  "verified_at": "2026-11-04T21:36:02.164291+08:00",
+  "trigger_beijing": "2026-11-04T21:29:38.811+08:00",
+  "version": "0.5.0",
+  "python_tests_passed": 27,
+  "new_collection_tests": 7,
+  "client_scenarios_passed": 3,
+  "checks": [
+    {
+      "name": "python-tests",
+      "exit_code": 0
+    },
+    {
+      "name": "client-tests",
+      "exit_code": 0
+    }
+  ],
+  "real_device_camera_and_gps": "not verified",
+  "https_public_deployment": "not available / not deployed",
+  "real_wechat": "still pending application/domain, no new authorization",
+  "test_data": "synthetic image and coordinates, temporary databases",
+  "not_implemented_today": [
+    "review",
+    "recollection state transitions",
+    "chat",
+    "middleware",
+    "map",
+    "OCR"
+  ],
+  "source_sha256": {
+    "check_collect/collection.py": "55eebf355f9fb585f5bce4d3e6ba30ba981adaa87dd8e90a875ff9e598d291b4",
+    "check_collect/server.py": "c235d8c6a4375fa6ea7cce30170cd588bd5a88c35993aeabc442d7d6c5385fbb",
+    "check_collect/static/capture.js": "837d900c315a254f9306be794b014bb2bd0c54bbbd039554802285be2dc70bda"
+  }
+}

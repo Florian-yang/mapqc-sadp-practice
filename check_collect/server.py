@@ -2,6 +2,7 @@
 from __future__ import annotations
 import argparse
 import html
+import json
 import threading
 import time
 from http.cookies import SimpleCookie, CookieError
@@ -9,10 +10,12 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs
 from .auth import Settings, Store, WeChat, AuthError
+from .collection import Collection, CATEGORIES, MAX_BODY
 
 
 def application(settings: Settings, provider=None):
     store = Store(settings.database)
+    collection = Collection(store)
     provider = provider or WeChat(settings)
     attempts = {}
     attempts_lock = threading.Lock()
@@ -38,18 +41,19 @@ def application(settings: Settings, provider=None):
             secure = '; Secure' if settings.origin.startswith('https:') else ''
             return f'{name}={value}; Path=/; HttpOnly; SameSite=Lax; Max-Age={age}{secure}'
 
-        def reply(self, status, body='', location=None, cookies=()):
+        def reply(self, status, body='', location=None, cookies=(), content_type='text/html; charset=utf-8'):
             self.send_response(status)
-            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.send_header('Content-Type', content_type)
             self.send_header('Cache-Control', 'no-store')
             self.send_header('Referrer-Policy', 'no-referrer')
             self.send_header('X-Content-Type-Options', 'nosniff')
-            self.send_header('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'")
+            self.send_header('Content-Security-Policy', "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self' data:; media-src 'self' blob:; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'")
+            self.send_header('Permissions-Policy', 'camera=(self), geolocation=(self), microphone=()')
             if location:
                 self.send_header('Location', location)
             for value in cookies:
                 self.send_header('Set-Cookie', value)
-            data = body.encode('utf-8')
+            data = body if isinstance(body,bytes) else body.encode('utf-8')
             self.send_header('Content-Length', str(len(data)))
             self.end_headers()
             self.wfile.write(data)
@@ -70,7 +74,10 @@ def application(settings: Settings, provider=None):
                     else:
                         body += '<p>微信绑定待平台配置。</p>'
                     body += '<p></p><form action="/auth/logout" method="post"><button>退出登录</button></form>'
-                    body += '<p>POI采集与核验功能按后续计划接入。</p>'
+                    if collection.is_collector(uid):
+                        body += '<p><a href="/collect">采集POI</a>　<a href="/my-pois">我的采集</a></p>'
+                    else:
+                        body += '<form action="/profile/collector" method="post"><button>加入采集者</button></form>'
                 elif settings.configured:
                     body = '<p>POI数据采集与核验</p><p>使用微信身份登录，首次授权后建立本系统账号。</p><form action="/auth/wechat/login" method="post"><button>微信扫码登录</button></form>'
                 else:
@@ -78,6 +85,33 @@ def application(settings: Settings, provider=None):
                 if not uid:
                     body += '<hr><p>也可先建立本系统账号，随后绑定微信。</p><form action="/auth/local/login" method="post"><p><label>账号 <input name="username" required minlength="3" maxlength="40" autocomplete="username"></label></p><p><label>密码 <input type="password" name="password" required minlength="12" maxlength="128" autocomplete="current-password"></label></p><button>账号登录</button> <button formaction="/auth/local/register">注册账号</button></form>'
                 self.reply(200, self.page(body))
+            elif path == '/static/capture.js':
+                self.reply(200,(Path(__file__).parent/'static/capture.js').read_bytes(),content_type='text/javascript; charset=utf-8')
+            elif path in ('/collect','/my-pois') or path.startswith('/api/pois'):
+                try:
+                    if not uid:
+                        self.reply(401,self.page('<p>请先登录</p><a href="/">登录</a>'));return
+                    collection._require(uid)
+                    if path == '/collect':
+                        options=''.join(f'<option value="{k}">{v}</option>' for k,v in CATEGORIES.items())
+                        content='<p><a href="/">账号</a> · <a href="/my-pois">我的采集</a></p><h2>采集POI</h2><p>打开相机后拍照，系统自动取得设备位置；定位成功后才能上传。</p><video autoplay playsinline muted style="width:100%;max-height:300px"></video><canvas hidden></canvas><p><button type="button" id="open-camera">打开相机</button> <button type="button" id="take-photo" disabled>拍照并自动定位</button></p><p id="notice" role="status"></p><img id="preview" alt="拍照预览" style="max-width:100%"><form id="capture-form"><p><label>POI名称 <input name="name" required maxlength="120"></label></p><p><label>类别 <select name="category">'+options+'</select></label></p><p><label>基本描述 <textarea name="description" required maxlength="1000" rows="3" style="width:100%;box-sizing:border-box"></textarea></label></p><button id="upload" disabled>上传照片与位置</button></form><script src="/static/capture.js" defer></script>'
+                        self.reply(200,self.page(content))
+                    elif path == '/my-pois':
+                        rows=collection.list_owned(uid)
+                        content='<p><a href="/collect">继续采集</a> · <a href="/">账号</a></p><h2>我的采集</h2>'
+                        if not rows: content+='<p>暂无采集</p>'
+                        for row in rows:
+                            content+=f'<article><h3>{html.escape(row["name"])}</h3><p>{CATEGORIES[row["category"]]} · 待核验</p><img alt="采集照片" style="max-width:100%" src="/api/pois/{row["id"]}/photo"><p>{html.escape(row["description"])}</p><p>自动位置：{row["latitude"]:.6f}, {row["longitude"]:.6f}；精度约{row["accuracy"]:.0f}米</p></article>'
+                        self.reply(200,self.page(content or '<p>暂无采集</p>'))
+                    elif path == '/api/pois':
+                        self.reply(200,json.dumps(collection.list_owned(uid),ensure_ascii=False),content_type='application/json; charset=utf-8')
+                    elif path.endswith('/photo') and len(path.split('/'))==5:
+                        self.reply(200,collection.photo(uid,path.split('/')[3]),content_type='image/jpeg')
+                    else:self.reply(404)
+                except AuthError as exc:
+                    self.reply(403,json.dumps({'error':str(exc)},ensure_ascii=False),content_type='application/json; charset=utf-8')
+                except OSError:
+                    self.reply(500,self.page('<p>照片暂时无法读取</p>'))
             elif path == '/auth/wechat/callback':
                 args = parse_qs(urlsplit(self.path).query)
                 def one(key):
@@ -106,12 +140,29 @@ def application(settings: Settings, provider=None):
             except ValueError:
                 length = -1
             local = path in ('/auth/local/login', '/auth/local/register')
-            if self.headers.get('Transfer-Encoding') or not 0 <= length <= 4096 or (not local and length):
+            upload = path == '/api/pois'
+            if self.headers.get('Transfer-Encoding') or not 0 <= length <= (MAX_BODY if upload else 4096) or (not local and not upload and length):
                 self.close_connection = True
                 self.reply(400, self.page('<p>该操作不接收表单内容</p>'))
                 return
             session = self.cookies().get('cc_session', '')
-            if local:
+            if path == '/profile/collector' or upload:
+                uid=store.user(session)
+                if not uid:
+                    self.reply(401,json.dumps({'error':'请先登录'},ensure_ascii=False),content_type='application/json; charset=utf-8');self.close_connection=True;return
+                try:
+                    if upload:
+                        if self.headers.get('Content-Type','').split(';')[0]!='application/json': raise AuthError('上传格式须为JSON')
+                        value=json.loads(self.rfile.read(length).decode('utf-8'))
+                        poi_id=collection.create(uid,value)
+                        self.reply(201,json.dumps({'id':poi_id,'status':'pending'}),content_type='application/json; charset=utf-8')
+                    else:
+                        collection.enroll(uid);self.reply(303,location='/collect')
+                except (AuthError,ValueError) as exc:
+                    self.reply(400,json.dumps({'error':str(exc) if isinstance(exc,AuthError) else '上传内容无效'},ensure_ascii=False),content_type='application/json; charset=utf-8')
+                except OSError:
+                    self.reply(500,json.dumps({'error':'保存失败，请稍后重试'},ensure_ascii=False),content_type='application/json; charset=utf-8')
+            elif local:
                 if self.headers.get('Content-Type', '').split(';')[0] != 'application/x-www-form-urlencoded':
                     self.reply(400, self.page('<p>表单格式无效</p>'))
                     self.close_connection = True

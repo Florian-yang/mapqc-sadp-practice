@@ -1,0 +1,1 @@
+3/3 client scenarios passed: upload/currentTarget, denied location, failed retake invalidates previous photo. Synthetic APIs only.

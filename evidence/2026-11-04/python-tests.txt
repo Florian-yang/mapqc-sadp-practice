@@ -1,0 +1,32 @@
+test_collector_opt_in_and_no_privileged_role (test_collection.CollectionTests.test_collector_opt_in_and_no_privileged_role) ... ok
+test_http_authenticated_upload_and_access_controls (test_collection.CollectionTests.test_http_authenticated_upload_and_access_controls) ... ok
+test_idempotent_retry_and_capture_replacement_rejected (test_collection.CollectionTests.test_idempotent_retry_and_capture_replacement_rejected) ... ok
+test_invalid_photo_text_and_category_rejected (test_collection.CollectionTests.test_invalid_photo_text_and_category_rejected) ... ok
+test_other_user_cannot_read_photo_or_list_record (test_collection.CollectionTests.test_other_user_cannot_read_photo_or_list_record) ... ok
+test_position_and_timestamps_required_and_finite (test_collection.CollectionTests.test_position_and_timestamps_required_and_finite) ... ok
+test_round_trip_image_metadata_and_restart (test_collection.CollectionTests.test_round_trip_image_metadata_and_restart) ... ok
+test_course_text (test_loaders.LoadingTests.test_course_text) ... ok
+test_course_vector (test_loaders.LoadingTests.test_course_vector) ... ok
+test_invalid_geometries (test_loaders.LoadingTests.test_invalid_geometries) ... ok
+test_invalid_json_shapes (test_loaders.LoadingTests.test_invalid_json_shapes) ... ok
+test_locations_and_record (test_loaders.LoadingTests.test_locations_and_record) ... ok
+test_missing_encoding_and_suffix (test_loaders.LoadingTests.test_missing_encoding_and_suffix) ... ok
+test_multigeometries_null_and_empty (test_loaders.LoadingTests.test_multigeometries_null_and_empty) ... ok
+test_strategy_injection_and_no_qt_dependency (test_loaders.LoadingTests.test_strategy_injection_and_no_qt_dependency) ... ok
+test_text_bom_newlines_empty (test_loaders.LoadingTests.test_text_bom_newlines_empty) ... ok
+test_register_then_bind_then_wechat_sign_in (test_local_http.LocalAccountHttpTest.test_register_then_bind_then_wechat_sign_in) ... ok
+test_adapter_exchanges_code_and_rejects_provider_errors (test_wechat.WeChatTests.test_adapter_exchanges_code_and_rejects_provider_errors) ... ok
+test_authorization_url_and_configuration (test_wechat.WeChatTests.test_authorization_url_and_configuration) ... ok
+test_binding_requires_current_session_and_prevents_account_takeover (test_wechat.WeChatTests.test_binding_requires_current_session_and_prevents_account_takeover) ... ok
+test_binding_revoked_during_provider_call (test_wechat.WeChatTests.test_binding_revoked_during_provider_call) ... ok
+test_expired_state_and_session (test_wechat.WeChatTests.test_expired_state_and_session) ... ok
+test_http_round_trip_with_injected_wechat_transport (test_wechat.WeChatTests.test_http_round_trip_with_injected_wechat_transport) ... ok
+test_register_bind_and_later_wechat_login_share_account (test_wechat.WeChatTests.test_register_bind_and_later_wechat_login_share_account) ... ok
+test_repeat_login_persistent_account_and_logout (test_wechat.WeChatTests.test_repeat_login_persistent_account_and_logout) ... ok
+test_state_bound_to_browser_and_single_use (test_wechat.WeChatTests.test_state_bound_to_browser_and_single_use) ... ok
+test_unconfigured_http_does_not_offer_fake_login (test_wechat.WeChatTests.test_unconfigured_http_does_not_offer_fake_login) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 5.931s
+
+OK

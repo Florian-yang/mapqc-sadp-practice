@@ -1,0 +1,23 @@
+@startuml
+actor 采集者
+participant "移动Web页面" as Web
+participant "设备相机/定位API" as Device
+participant "HTTP控制器" as HTTP
+participant "Collection服务" as C
+database "SQLite及照片目录" as DB
+采集者 -> Web : 打开相机并拍照
+Web -> Device : getUserMedia / 当前帧截图
+Web -> Device : getCurrentPosition(maximumAge=0)
+alt 定位失败或超时
+ Web --> 采集者 : 清除本次草稿，不允许上传
+else 定位成功
+ Device --> Web : 坐标、精度、时间
+ 采集者 -> Web : 类别、名称、描述；上传
+ Web -> HTTP : 会话 + 照片 + 位置 + capture_id
+ HTTP -> C : 检查采集角色、字段、图片及时间
+ C -> DB : 本人标识去重，保存图片与记录
+ DB --> C : POI编号
+ C --> Web : 待核验记录
+end
+note over Web,Device : API处理器已用测试替身验证；HTTPS手机相机/GPS尚待真机验收
+@enduml
