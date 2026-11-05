@@ -1,0 +1,12 @@
+{
+  "date_beijing": "2026-11-05",
+  "verified_at": "2026-11-05T23:12:11.792066+08:00",
+  "implementation_commit": "075f57bf3f8a1b840eda0254d076005c08f8f9ea",
+  "remote_main_at_verification": "075f57bf3f8a1b840eda0254d076005c08f8f9ea",
+  "tag": "v0.6.0",
+  "tag_object": "b01b1e29c796b37e3953201b0b036ef876ad55a9",
+  "remote_tag_target": "075f57bf3f8a1b840eda0254d076005c08f8f9ea",
+  "push_verified": true,
+  "scope": "Local review and collector responses source milestone; 39 Python tests and 6 synthetic client scenarios. Physical recollection, HTTPS, WeChat and middleware delivery are not accepted.",
+  "receipt": "Diary and receipt follow verified source/tag push. Final branch checked again after receipt push."
+}
