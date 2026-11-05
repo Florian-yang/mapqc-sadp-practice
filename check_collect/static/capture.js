@@ -42,7 +42,10 @@ document.querySelector('#capture-form').addEventListener('submit',async(event)=>
   const element=event.currentTarget, form=new FormData(element);
   busy=true;send.disabled=true;take.disabled=true;open.disabled=true;
   try{
-    const result=await api('/api/pois',{...draft,name:form.get('name'),category:form.get('category'),description:form.get('description')});
+    const context=element.dataset||{};
+    const body={...draft,name:form.get('name'),category:form.get('category'),description:form.get('description')};
+    if(context.poiId)Object.assign(body,{action:'recollect',issue_id:context.issueId,revision:Number(context.revision),reason:form.get('reason')});
+    const result=await api(context.poiId?`/api/review/${context.poiId}/respond`:'/api/pois',body);
     note.textContent='上传成功，记录编号：'+result.id;invalidate();element.reset();stop();
   }catch(e){note.textContent=e.message;send.disabled=!draft;}
   finally{busy=false;take.disabled=!stream;open.disabled=false;}

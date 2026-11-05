@@ -1,22 +1,23 @@
 // DOM/device test doubles only; these checks do not use a physical camera/GPS.
 const vm=require('node:vm'), fs=require('node:fs'), assert=require('node:assert/strict');
 const code=fs.readFileSync('check_collect/static/capture.js','utf8');
-function setup(){
+function setup(recollect=false){
  const elements={};
  for(const id of ['video','canvas','#open-camera','#take-photo','#upload','#notice','#preview','#capture-form'])
   elements[id]={handlers:{},disabled:true,addEventListener(k,f){this.handlers[k]=f;},removeAttribute(k){delete this[k];}};
  const tracks={stopped:false,stop(){this.stopped=true;}};
  elements.video.videoWidth=800;elements.video.videoHeight=600;elements.video.play=async()=>{};
  elements.canvas.getContext=()=>({drawImage(){}});elements.canvas.toDataURL=()=> 'data:image/jpeg;base64,U1lOVEhFVElD';
- const requests=[];let geoFail=false,resets=0;
+ const requests=[];let geoFail=false,uploadFail=false,resets=0;
  elements['#capture-form'].reset=()=>resets++;
+ if(recollect)elements['#capture-form'].dataset={poiId:'synthetic-poi',issueId:'synthetic-issue',revision:'2'};
  const context={console,Date,Math,Error,Promise,window:{isSecureContext:true,addEventListener(){}},document:{querySelector:k=>elements[k],addEventListener(){}},crypto:{randomUUID:()=> 'synthetic-capture-0001'},
   navigator:{mediaDevices:{getUserMedia:async options=>{assert.equal(options.audio,false);return {getTracks:()=>[tracks]};}},
    geolocation:{getCurrentPosition(ok,fail,options){assert.equal(options.maximumAge,0);if(geoFail)fail({message:'permission denied'});else ok({timestamp:Date.now(),coords:{latitude:30,longitude:114,accuracy:10}});}}},
-  FormData:class{get(k){return {name:'synthetic',description:'unit test only',category:'shop'}[k];}},
-  fetch:async(url,options)=>{requests.push({url,body:JSON.parse(options.body)});return {ok:true,json:async()=>({id:'synthetic-id'})};}};
+  FormData:class{get(k){return {name:'synthetic',description:'unit test only',category:'shop',reason:'retaken after review'}[k];}},
+  fetch:async(url,options)=>{requests.push({url,body:JSON.parse(options.body)});return {ok:!uploadFail,json:async()=>uploadFail?{error:'记录已变化，请刷新'}:{id:'synthetic-id'}};}};
  vm.runInNewContext(code,context);
- return {elements,requests,tracks,failGeo(){geoFail=true;},resets:()=>resets};
+ return {elements,requests,tracks,failGeo(){geoFail=true;},failUpload(){uploadFail=true;},resets:()=>resets};
 }
 (async()=>{
  const a=setup();await a.elements['#open-camera'].handlers.click();await a.elements['#take-photo'].handlers.click();
@@ -33,5 +34,16 @@ function setup(){
  assert.equal(b.elements['#upload'].disabled,true);assert.equal(b.requests.length,0);
  const c=setup();await c.elements['#open-camera'].handlers.click();await c.elements['#take-photo'].handlers.click();
  c.failGeo();await c.elements['#take-photo'].handlers.click();assert.equal(c.elements['#upload'].disabled,true);
- console.log('3/3 client scenarios passed: upload/currentTarget, denied location, failed retake invalidates previous photo. Synthetic APIs only.');
+ const d=setup(true);await d.elements['#open-camera'].handlers.click();await d.elements['#take-photo'].handlers.click();
+ await d.elements['#capture-form'].handlers.submit({preventDefault(){},currentTarget:d.elements['#capture-form']});
+ assert.equal(d.requests[0].url,'/api/review/synthetic-poi/respond');
+ assert.equal(d.requests[0].body.action,'recollect');assert.equal(d.requests[0].body.issue_id,'synthetic-issue');
+ assert.equal(d.requests[0].body.revision,2);assert.equal(d.requests[0].body.reason,'retaken after review');
+ const e=setup(true);await e.elements['#open-camera'].handlers.click();e.failGeo();await e.elements['#take-photo'].handlers.click();
+ await e.elements['#capture-form'].handlers.submit({preventDefault(){},currentTarget:e.elements['#capture-form']});
+ assert.equal(e.requests.length,0);
+ const f=setup(true);await f.elements['#open-camera'].handlers.click();await f.elements['#take-photo'].handlers.click();f.failUpload();
+ await f.elements['#capture-form'].handlers.submit({preventDefault(){},currentTarget:f.elements['#capture-form']});
+ assert.equal(f.elements['#notice'].textContent,'记录已变化，请刷新');assert.equal(f.elements['#upload'].disabled,false);
+ console.log('6/6 client scenarios passed: upload/currentTarget, denied location, failed retake invalidation, recollection endpoint/context, denied recollection, actionable server error. Synthetic APIs only.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

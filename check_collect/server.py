@@ -11,11 +11,14 @@ from pathlib import Path
 from urllib.parse import urlsplit, parse_qs
 from .auth import Settings, Store, WeChat, AuthError
 from .collection import Collection, CATEGORIES, MAX_BODY
+from .review import Review
+from . import review_pages
 
 
 def application(settings: Settings, provider=None):
     store = Store(settings.database)
     collection = Collection(store)
+    review = Review(collection)
     provider = provider or WeChat(settings)
     attempts = {}
     attempts_lock = threading.Lock()
@@ -61,6 +64,12 @@ def application(settings: Settings, provider=None):
         def page(self, content):
             return '<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>check@collect</title><style>body{font:18px/1.7 system-ui;max-width:640px;margin:8vh auto;padding:24px;color:#20352c;background:#f5f8f5}main{padding:28px;background:white;border:1px solid #dbe4dd;border-radius:14px}h1{font-size:28px}button{padding:12px 20px;background:#19734d;color:white;border:0;border-radius:7px;font-size:17px;cursor:pointer}a{color:#19734d}code{overflow-wrap:anywhere}</style><main><h1>check@collect</h1>' + content + '</main></html>'
 
+        def reply_error(self,status,message):
+            if urlsplit(self.path).path.startswith('/api/'):
+                self.reply(status,json.dumps({'error':message},ensure_ascii=False),content_type='application/json; charset=utf-8')
+            else:
+                self.reply(status,self.page('<p>'+html.escape(message)+'</p><a href="/">返回</a>'))
+
         def do_GET(self):
             path = urlsplit(self.path).path
             cookies = self.cookies()
@@ -78,6 +87,8 @@ def application(settings: Settings, provider=None):
                         body += '<p><a href="/collect">采集POI</a>　<a href="/my-pois">我的采集</a></p>'
                     else:
                         body += '<form action="/profile/collector" method="post"><button>加入采集者</button></form>'
+                    if collection.has_role(uid,'reviewer'):
+                        body += '<p><a href="/review">核验工作台</a></p>'
                 elif settings.configured:
                     body = '<p>POI数据采集与核验</p><p>使用微信身份登录，首次授权后建立本系统账号。</p><form action="/auth/wechat/login" method="post"><button>微信扫码登录</button></form>'
                 else:
@@ -87,26 +98,49 @@ def application(settings: Settings, provider=None):
                 self.reply(200, self.page(body))
             elif path == '/static/capture.js':
                 self.reply(200,(Path(__file__).parent/'static/capture.js').read_bytes(),content_type='text/javascript; charset=utf-8')
+            elif path=='/review' or path=='/api/review' or path.startswith('/poi/') or path.startswith('/api/review/'):
+                try:
+                    if not uid:
+                        self.reply_error(401,'请先登录');return
+                    if path=='/review': self.reply(200,self.page(review_pages.listing(review,uid,True)))
+                    elif path=='/api/review': self.reply(200,json.dumps(review.queue(uid),ensure_ascii=False),content_type='application/json; charset=utf-8')
+                    elif path.startswith('/poi/') and len(path.split('/'))==3:
+                        self.reply(200,self.page(review_pages.history(review.detail(uid,path.split('/')[2]))))
+                    elif path.startswith('/api/review/') and len(path.split('/'))==4:
+                        self.reply(200,json.dumps(review.detail(uid,path.split('/')[3]),ensure_ascii=False),content_type='application/json; charset=utf-8')
+                    else:self.reply(404)
+                except AuthError as exc:
+                    self.reply_error(403,str(exc))
             elif path in ('/collect','/my-pois') or path.startswith('/api/pois'):
                 try:
                     if not uid:
                         self.reply(401,self.page('<p>请先登录</p><a href="/">登录</a>'));return
-                    collection._require(uid)
+                    if not path.endswith('/photo'): collection._require(uid)
                     if path == '/collect':
                         options=''.join(f'<option value="{k}">{v}</option>' for k,v in CATEGORIES.items())
                         content='<p><a href="/">账号</a> · <a href="/my-pois">我的采集</a></p><h2>采集POI</h2><p>打开相机后拍照，系统自动取得设备位置；定位成功后才能上传。</p><video autoplay playsinline muted style="width:100%;max-height:300px"></video><canvas hidden></canvas><p><button type="button" id="open-camera">打开相机</button> <button type="button" id="take-photo" disabled>拍照并自动定位</button></p><p id="notice" role="status"></p><img id="preview" alt="拍照预览" style="max-width:100%"><form id="capture-form"><p><label>POI名称 <input name="name" required maxlength="120"></label></p><p><label>类别 <select name="category">'+options+'</select></label></p><p><label>基本描述 <textarea name="description" required maxlength="1000" rows="3" style="width:100%;box-sizing:border-box"></textarea></label></p><button id="upload" disabled>上传照片与位置</button></form><script src="/static/capture.js" defer></script>'
+                        query=parse_qs(urlsplit(self.path).query)
+                        if query:
+                            if set(query)!={'poi_id','issue_id','revision'} or any(len(v)!=1 for v in query.values()): raise AuthError('重采请求无效')
+                            detail=review.detail(uid,query['poi_id'][0]);row=detail['poi']
+                            issue=next((x for x in detail['issues'] if x['id']==query['issue_id'][0] and x['status']=='open'),None)
+                            if row['owner']!=uid or row['status']!='needs_action' or str(row['revision'])!=query['revision'][0] or not issue: raise AuthError('重采请求已失效或无权操作')
+                            attrs=f'id="capture-form" data-poi-id="{row["id"]}" data-issue-id="{issue["id"]}" data-revision="{row["revision"]}"'
+                            content=content.replace('id="capture-form"',attrs).replace('<h2>采集POI</h2>','<h2>重新采集POI</h2><p>错误说明：'+html.escape(issue['description'])+'</p>')
+                            content=content.replace('<button id="upload"','<p><label>处理说明 <textarea name="reason" required maxlength="1000"></textarea></label></p><button id="upload"')
                         self.reply(200,self.page(content))
                     elif path == '/my-pois':
-                        rows=collection.list_owned(uid)
-                        content='<p><a href="/collect">继续采集</a> · <a href="/">账号</a></p><h2>我的采集</h2>'
-                        if not rows: content+='<p>暂无采集</p>'
-                        for row in rows:
-                            content+=f'<article><h3>{html.escape(row["name"])}</h3><p>{CATEGORIES[row["category"]]} · 待核验</p><img alt="采集照片" style="max-width:100%" src="/api/pois/{row["id"]}/photo"><p>{html.escape(row["description"])}</p><p>自动位置：{row["latitude"]:.6f}, {row["longitude"]:.6f}；精度约{row["accuracy"]:.0f}米</p></article>'
+                        content=review_pages.listing(review,uid)
                         self.reply(200,self.page(content or '<p>暂无采集</p>'))
                     elif path == '/api/pois':
                         self.reply(200,json.dumps(collection.list_owned(uid),ensure_ascii=False),content_type='application/json; charset=utf-8')
                     elif path.endswith('/photo') and len(path.split('/'))==5:
-                        self.reply(200,collection.photo(uid,path.split('/')[3]),content_type='image/jpeg')
+                        query=parse_qs(urlsplit(self.path).query)
+                        revision=None
+                        if query:
+                            if set(query)!={'revision'} or len(query['revision'])!=1 or len(query['revision'][0])>10 or not query['revision'][0].isascii() or not query['revision'][0].isdigit(): raise AuthError('照片版本无效')
+                            revision=int(query['revision'][0])
+                        self.reply(200,collection.photo(uid,path.split('/')[3],revision),content_type='image/jpeg')
                     else:self.reply(404)
                 except AuthError as exc:
                     self.reply(403,json.dumps({'error':str(exc)},ensure_ascii=False),content_type='application/json; charset=utf-8')
@@ -132,7 +166,7 @@ def application(settings: Settings, provider=None):
         def do_POST(self):
             # Browser forms have an Origin. No mutation from foreign origins.
             if self.headers.get('Origin') != settings.origin:
-                self.reply(403, self.page('<p>请求来源无效</p>'))
+                self.reply_error(403,'请求来源无效')
                 return
             path = urlsplit(self.path).path
             try:
@@ -140,13 +174,40 @@ def application(settings: Settings, provider=None):
             except ValueError:
                 length = -1
             local = path in ('/auth/local/login', '/auth/local/register')
-            upload = path == '/api/pois'
-            if self.headers.get('Transfer-Encoding') or not 0 <= length <= (MAX_BODY if upload else 4096) or (not local and not upload and length):
+            response_json=path.startswith('/api/review/') and path.endswith('/respond') and len(path.split('/'))==5
+            workflow=path in ('/review/report','/review/respond')
+            upload = path == '/api/pois' or response_json
+            if self.headers.get('Transfer-Encoding') or not 0 <= length <= (MAX_BODY if upload else 16384 if workflow else 4096) or (not local and not upload and not workflow and length):
                 self.close_connection = True
-                self.reply(400, self.page('<p>该操作不接收表单内容</p>'))
+                self.reply_error(400,'请求内容长度或格式无效')
                 return
             session = self.cookies().get('cc_session', '')
-            if path == '/profile/collector' or upload:
+            if workflow or response_json:
+                uid=store.user(session)
+                if not uid:
+                    self.reply_error(401,'请先登录');self.close_connection=True;return
+                try:
+                    raw=self.rfile.read(length).decode('utf-8')
+                    if response_json:
+                        if self.headers.get('Content-Type','').split(';')[0]!='application/json': raise AuthError('请求格式须为JSON')
+                        value=json.loads(raw)
+                        poi_id=path.split('/')[3]
+                        version=review.respond(uid,poi_id,value)
+                        self.reply(200,json.dumps({'id':poi_id,'revision':version}),content_type='application/json; charset=utf-8')
+                    else:
+                        if self.headers.get('Content-Type','').split(';')[0]!='application/x-www-form-urlencoded': raise AuthError('表单格式无效')
+                        parsed=parse_qs(raw,max_num_fields=10)
+                        if any(len(v)!=1 for v in parsed.values()): raise AuthError('表单字段重复')
+                        value={k:v[0] for k,v in parsed.items()}
+                        value['revision']=int(value.get('revision',''))
+                        if path=='/review/report': review.report(uid,value.get('poi_id'),value['revision'],value.get('description'))
+                        else: review.respond(uid,value.get('poi_id'),value)
+                        self.reply(303,location='/review' if path=='/review/report' else '/my-pois')
+                except (AuthError,ValueError) as exc:
+                    self.reply_error(400,str(exc) if isinstance(exc,AuthError) else '处理内容无效')
+                except OSError:
+                    self.reply_error(500,'保存失败，请稍后重试')
+            elif path == '/profile/collector' or upload:
                 uid=store.user(session)
                 if not uid:
                     self.reply(401,json.dumps({'error':'请先登录'},ensure_ascii=False),content_type='application/json; charset=utf-8');self.close_connection=True;return

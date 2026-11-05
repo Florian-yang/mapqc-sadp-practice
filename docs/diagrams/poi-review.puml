@@ -1,0 +1,39 @@
+@startuml
+title 核验错误与采集者处理（11月5日本地实现）
+actor 核验者
+actor 采集者
+boundary Web页面
+control HTTP控制器
+control Review
+control Collection
+database SQLite
+collections 照片文件
+核验者 -> Web页面 : 标识POI、填写错误说明
+Web页面 -> HTTP控制器 : POST /review/report
+HTTP控制器 -> Review : report(用户, POI, 版本, 说明)
+Review -> SQLite : 检查核验角色、所有权和当前版本
+group 同一事务
+Review -> SQLite : 保存错误、needs_action、通知待发送事件
+end
+采集者 -> Web页面 : 查看错误并选择处理方式
+opt 重新采集
+Web页面 -> Web页面 : 相机拍照、设备自动定位
+end
+Web页面 -> HTTP控制器 : 处理说明与当前版本
+HTTP控制器 -> Review : respond(原采集者, POI, 内容)
+Review -> SQLite : BEGIN IMMEDIATE，检查所有权、版本和待处理错误
+alt 更新
+Review -> Collection : 校验名称、类别和描述
+Review -> SQLite : 保存新版本，状态pending
+else 重新采集
+Review -> Collection : 校验新照片、位置与拍摄标识
+Collection --> Review : 可保存内容
+Review -> 照片文件 : 保存新版本照片，保留旧照片
+Review -> SQLite : 保存新版本，状态pending
+else 驳回
+Review -> SQLite : 保存理由，状态disputed
+end
+Review -> SQLite : 保存处理记录、核验者通知待发送事件
+Review -> SQLite : COMMIT
+note over Review, SQLite : 待发送箱尚无消费者，未计作消息投递\n真实手机与HTTPS仍待验收
+@enduml

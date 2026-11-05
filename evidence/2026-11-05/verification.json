@@ -1,0 +1,49 @@
+{
+  "verified_at": "2026-11-05T23:08:34.463161+08:00",
+  "trigger_beijing": "2026-11-05T22:54:01.591+08:00",
+  "schedule_lateness_minutes": 84,
+  "lateness_cause": "unknown; no invented earlier execution",
+  "version": "0.6.0",
+  "python_tests_passed": 39,
+  "new_review_tests": 12,
+  "client_scenarios_passed": 6,
+  "checks": [
+    {
+      "name": "python-tests",
+      "exit_code": 0
+    },
+    {
+      "name": "client-tests",
+      "exit_code": 0
+    },
+    {
+      "name": "diff-check",
+      "exit_code": 0
+    }
+  ],
+  "scope": "Review issue, collector update/recollect/reject, permissions, immutable history, transactional pending outbox",
+  "real_http": "Loopback HTTP used by tests/test_review.py; report/update/recollect/reject/history/access checks passed",
+  "test_data": "Synthetic photos, coordinates and device APIs; temporary databases only",
+  "real_mobile_and_https": "not verified; no usable HTTPS domain confirmed",
+  "wechat": "still pending application/domain; no real OAuth acceptance",
+  "middleware_delivery": "not implemented today; outbox delivered_ms remains NULL",
+  "not_implemented_today": [
+    "chat",
+    "third-party arbitration",
+    "middleware producer/consumer",
+    "map",
+    "OCR"
+  ],
+  "source_sha256": {
+    "check_collect/__init__.py": "4b910b31aa4b615c0415eda76613e7518e056d73eca7c07bc8f0927e374c2889",
+    "check_collect/auth.py": "8ed9fb05a46f69abf983a371ec2c12d48f31790bd315b3cc610fadddfaf2acd1",
+    "check_collect/collection.py": "9171b2f19fad5a3a755cb016d3346c530531a80e8c9f260a9bc2fc133f460a5a",
+    "check_collect/review.py": "339b98c329dfea93749a206f8c53d157e20fb7bfeb8ce1fee30e11cb04dd87eb",
+    "check_collect/review_pages.py": "950def907ebcd931ed3eed47b7ea85d35c0bafb8d385546a6a2356d85cba6115",
+    "check_collect/roles.py": "660a37fd9cf543ef834f13e0d9c4f9d91ac6568930f7b84d902a71b0960f3c65",
+    "check_collect/server.py": "62bb64ae52e9fe539bb56b81cb5962026092aa6b2720f3c37061747ff1b6b923",
+    "check_collect/static/capture.js": "ec551e652d61070572db3b5cc41bf570656d2d5826265f906b2660d814192315",
+    "tests/capture_client_test.cjs": "096dc8ec83102d38dbafaaa8e98f4c4ed2403f3b127dde1e1fca81d7604b7efe",
+    "tests/test_review.py": "391c6ce4b5affe7cc9ad797413ec0d234cf1e52b49a68a2d1c0f7d092a6a4ab5"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "title": "check@collect综合实践计划（11/3依据完整题目修订）",
   "authoritative_requirements": "docs/assignment-original.md",
-  "updated": "2026-11-03",
+  "updated": "2026-11-05",
   "summary": "移动Web/Internet POI采集核验系统，B/S与N层；现有MapQC为历史准备材料，不代表新题目功能已实现。",
   "deadline_beijing": "2026-11-11T22:30:00+08:00",
   "normal_development_until": "2026-11-09",
@@ -12,19 +12,23 @@
       "date": "11/3",
       "version": "v0.4",
       "task": "按完整题目纠偏，建立Web认证入口；微信登录与绑定、账号会话及配置说明",
-      "result": "本地账号可注册登录；微信协议、安全及HTTP测试通过；真实微信联调因缺应用与域名仍待验收"
+      "result": "本地账号可注册登录；微信协议、安全及HTTP测试通过；真实微信联调因缺应用与域名仍待验收",
+      "status": "local_verified; real_wechat_pending"
     },
     {
       "date": "11/4",
       "version": "v0.5",
       "task": "移动端拍照、自动定位、POI分类描述、照片上传及采集者角色",
-      "result": "HTTPS与真机授权验证；位置随照片上报，拒绝缺失定位；记录定位精度、时间和可验证的关联边界"
+      "result": "HTTPS与真机授权验证；位置随照片上报，拒绝缺失定位；记录定位精度、时间和可验证的关联边界",
+      "status": "local_verified; https_physical_device_pending"
     },
     {
       "date": "11/5",
       "version": "v0.6",
       "task": "核验错误标识、说明保存；采集者重采、更新、驳回状态流转",
-      "result": "按采集者/核验者权限验证，核验后通知事件入待发送箱，保留版本与状态证据"
+      "result": "按采集者/核验者权限验证，核验后通知事件入待发送箱，保留版本与状态证据",
+      "status": "local_verified; physical_recollection_pending; outbox_not_delivered",
+      "evidence": "evidence/2026-11-05"
     },
     {
       "date": "11/6",
