@@ -12,6 +12,7 @@ from urllib.parse import urlsplit, parse_qs
 from .auth import Settings, Store, WeChat, AuthError
 from .collection import Collection, CATEGORIES, MAX_BODY
 from .review import Review
+from .notifications import Notifications
 from . import review_pages
 
 
@@ -19,6 +20,7 @@ def application(settings: Settings, provider=None):
     store = Store(settings.database)
     collection = Collection(store)
     review = Review(collection)
+    notifications = Notifications(store)
     provider = provider or WeChat(settings)
     attempts = {}
     attempts_lock = threading.Lock()
@@ -89,6 +91,7 @@ def application(settings: Settings, provider=None):
                         body += '<form action="/profile/collector" method="post"><button>加入采集者</button></form>'
                     if collection.has_role(uid,'reviewer'):
                         body += '<p><a href="/review">核验工作台</a></p>'
+                    body += '<p><a href="/notifications">我的通知</a></p>'
                 elif settings.configured:
                     body = '<p>POI数据采集与核验</p><p>使用微信身份登录，首次授权后建立本系统账号。</p><form action="/auth/wechat/login" method="post"><button>微信扫码登录</button></form>'
                 else:
@@ -96,6 +99,11 @@ def application(settings: Settings, provider=None):
                 if not uid:
                     body += '<hr><p>也可先建立本系统账号，随后绑定微信。</p><form action="/auth/local/login" method="post"><p><label>账号 <input name="username" required minlength="3" maxlength="40" autocomplete="username"></label></p><p><label>密码 <input type="password" name="password" required minlength="12" maxlength="128" autocomplete="current-password"></label></p><button>账号登录</button> <button formaction="/auth/local/register">注册账号</button></form>'
                 self.reply(200, self.page(body))
+            elif path in ('/notifications','/api/notifications'):
+                if not uid:
+                    self.reply_error(401,'请先登录');return
+                if path=='/notifications': self.reply(200,self.page(notifications.page(uid)))
+                else:self.reply(200,json.dumps(notifications.list_owned(uid),ensure_ascii=False),content_type='application/json; charset=utf-8')
             elif path == '/static/capture.js':
                 self.reply(200,(Path(__file__).parent/'static/capture.js').read_bytes(),content_type='text/javascript; charset=utf-8')
             elif path=='/review' or path=='/api/review' or path.startswith('/poi/') or path.startswith('/api/review/'):
@@ -182,7 +190,15 @@ def application(settings: Settings, provider=None):
                 self.reply_error(400,'请求内容长度或格式无效')
                 return
             session = self.cookies().get('cc_session', '')
-            if workflow or response_json:
+            if path.startswith('/notifications/') and path.endswith('/read') and len(path.split('/'))==4:
+                uid=store.user(session)
+                if not uid:
+                    self.reply_error(401,'请先登录');return
+                try:
+                    notifications.mark_read(uid,path.split('/')[2])
+                    self.reply(303,location='/notifications')
+                except AuthError as exc:self.reply_error(403,str(exc))
+            elif workflow or response_json:
                 uid=store.user(session)
                 if not uid:
                     self.reply_error(401,'请先登录');self.close_connection=True;return

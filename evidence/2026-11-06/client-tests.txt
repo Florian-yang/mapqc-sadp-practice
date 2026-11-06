@@ -1,0 +1,1 @@
+6/6 client scenarios passed: upload/currentTarget, denied location, failed retake invalidation, recollection endpoint/context, denied recollection, actionable server error. Synthetic APIs only.

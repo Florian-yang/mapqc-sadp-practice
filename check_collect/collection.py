@@ -12,6 +12,7 @@ import time
 import warnings
 from PIL import Image, UnidentifiedImageError
 from .auth import AuthError
+from .events import ensure_schema, queue_role
 
 CATEGORIES = {'house':'房屋','shop':'商铺','bus_stop':'公交站','greenery':'绿化','scenic':'景点','other':'其他'}
 MAX_BODY = 6 * 1024 * 1024
@@ -24,6 +25,7 @@ class Collection:
         self.photos.mkdir(exist_ok=True)
         with store.connect() as db:
             db.executescript('''
+            BEGIN IMMEDIATE;
             CREATE TABLE IF NOT EXISTS user_roles(
               user_id TEXT NOT NULL REFERENCES users(id), role TEXT NOT NULL,
               PRIMARY KEY(user_id,role));
@@ -44,6 +46,7 @@ class Collection:
               PRIMARY KEY(poi_id,revision))''')
             for row in db.execute('SELECT * FROM pois WHERE NOT EXISTS (SELECT 1 FROM poi_versions v WHERE v.poi_id=pois.id)'):
                 self.snapshot(db, row, row['id']+'.jpg')
+            ensure_schema(db)
 
     def has_role(self, uid, role):
         with self.store.connect() as db:
@@ -87,6 +90,7 @@ class Collection:
                 keys=list(fields)
                 db.execute('INSERT INTO pois(id,owner,'+','.join(keys)+',created_ms,fingerprint) VALUES('+','.join('?' for _ in range(len(keys)+4))+')',[poi_id,uid]+[fields[k] for k in keys]+[now,fingerprint])
                 self.snapshot(db,db.execute('SELECT * FROM pois WHERE id=?',(poi_id,)).fetchone(),path.name)
+                queue_role(db,'reviewer','poi.ready_for_review',{'poi_id':poi_id,'revision':1},exclude=(uid,))
                 db.commit()
             except Exception:
                 if created: path.unlink(missing_ok=True)

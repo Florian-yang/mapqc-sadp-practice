@@ -1,0 +1,14 @@
+[
+  {
+    "phase": "new integration test preparation",
+    "outcome": "10 real broker scenarios: 9 passed, 1 setup error",
+    "error": "NATS rejects max_age=5 when duplicate_window=120",
+    "resolution": "Use max_age=300 to construct a valid but unsafe existing configuration; subsequent full suite passed"
+  },
+  {
+    "phase": "verification log parsing",
+    "outcome": "51 tests and 6 frontend scenarios actually passed; receipt generation assertion failed",
+    "error": "Installer fixture stdout followed the unittest OK line",
+    "resolution": "Match standalone OK line and test exit status; suppress fixture output; subsequent final verification passed"
+  }
+]

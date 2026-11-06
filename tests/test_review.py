@@ -31,6 +31,8 @@ class ReviewTests(unittest.TestCase):
         grant_reviewer(self.store,self.reviewer)
         self.capture=self.capture_value('initial-synthetic-0001')
         self.poi=self.collection.create(self.owner,self.capture)
+        # These tests isolate review events; initial task broadcasts are tested separately.
+        with self.store.connect() as db: db.execute('DELETE FROM event_outbox')
 
     def capture_value(self,capture_id,color=(20,120,40)):
         image=io.BytesIO();Image.new('RGB',(24,32),color).save(image,'JPEG')

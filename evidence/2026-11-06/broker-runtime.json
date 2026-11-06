@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/nats-io/nats-server/releases/download/v2.15.2/nats-server-v2.15.2-windows-amd64.zip",
+  "zip_sha256": "f6398d5d11093778f870db70242cb50d20a58134c937c805ba8d114e7e398766",
+  "official_sha256sum_verified": true,
+  "binary_sha256": "a7785bc14837679c6653a6c8090c79e4c4f7b28a5f7f144f3a734248a302ac41",
+  "version_output": "nats-server: v2.15.2",
+  "client_version": "2.16.0"
+}

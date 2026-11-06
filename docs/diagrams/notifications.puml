@@ -1,0 +1,28 @@
+@startuml
+title 系统通知投递（11月6日本机实现）
+actor 维护者
+actor 采集者
+actor 核验者
+control "业务服务 / 系统通知命令" as Business
+database "SQLite待发送箱" as Outbox
+control "消息生产者" as Producer
+queue "NATS JetStream\n独立进程、文件存储" as NATS
+control "持久消费者" as Consumer
+database "SQLite本人收件箱" as Inbox
+boundary "Web通知页面" as Web
+维护者 -> Business : 按采集者 / 核验者角色群发
+采集者 -> Business : 提交或更新POI
+核验者 -> Business : 标识错误
+Business -> Outbox : 业务事务内保存接收者事件
+Producer -> Outbox : 读取未发布事件
+Producer -> NATS : 发布，Nats-Msg-Id=事件ID
+NATS --> Producer : 发布确认
+Producer -> Outbox : 记录published_ms
+Consumer -> NATS : 拉取消息
+NATS --> Consumer : 消息与接收者
+Consumer -> Inbox : 同事务去重入箱、记录delivered_ms
+Consumer -> NATS : 入库后确认消费
+采集者 -> Web : 查看本人通知
+Web -> Inbox : 按登录用户读取 / 标记已读
+note over Producer, Consumer : 未确认时重试；入箱不等于已读\n本机验证不代替公网或真机验收
+@enduml

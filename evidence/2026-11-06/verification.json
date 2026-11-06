@@ -1,0 +1,65 @@
+{
+  "verified_at": "2026-11-06T21:46:55.606392+08:00",
+  "trigger_beijing": "2026-11-06T21:27:26.790+08:00",
+  "version": "0.7.0",
+  "python_tests_passed": 52,
+  "python_tests_skipped": 0,
+  "real_broker_scenarios": 10,
+  "client_scenarios_passed": 6,
+  "checks": [
+    {
+      "name": "python-tests",
+      "exit_code": 0
+    },
+    {
+      "name": "client-tests",
+      "exit_code": 0
+    },
+    {
+      "name": "diff-check",
+      "exit_code": 0
+    }
+  ],
+  "broker": "nats-server: v2.15.2",
+  "client": "nats-py 2.16.0",
+  "transport": "Independent local NATS server subprocesses, TCP loopback, JetStream file storage",
+  "scope": "Role broadcasts, automatic review tasks, targeted review notifications, owned inbox and read marking; acknowledgements/retry/idempotency",
+  "delivery_semantics": "delivered_ms means committed inbox; read_ms only marks user action, not guaranteed comprehension",
+  "test_data": "Synthetic accounts/photos/coordinates; real broker/client transport and HTTP inbox",
+  "pending_external": [
+    "real WeChat application/domain",
+    "HTTPS physical camera/GPS/recollection",
+    "Internet deployment"
+  ],
+  "not_implemented_today": [
+    "private chat",
+    "two role group chats",
+    "third-party dispute resolution",
+    "map",
+    "OCR"
+  ],
+  "limits": [
+    "single-node local broker",
+    "no cluster or power-loss acceptance",
+    "broker shutdown after tests; no background service installed"
+  ],
+  "source_sha256": {
+    "check_collect/__init__.py": "f303e39158f8e030e3faa0f05c6e6bbe2e04e36ae183e965685de9ef735cf454",
+    "check_collect/auth.py": "8ed9fb05a46f69abf983a371ec2c12d48f31790bd315b3cc610fadddfaf2acd1",
+    "check_collect/collection.py": "d04c556055bde9b80152a4dcd943d75be6e7be1b6651441566bed9f3d32b1c02",
+    "check_collect/events.py": "a718338964de268f0d28803342c7bd77773298b0e5ae933b75a267318e8baed2",
+    "check_collect/messaging.py": "378d692afa24a90ae98ef4736e1616a451c1d6563fe140960b12606e2274edb7",
+    "check_collect/notifications.py": "71fa899f87309c55baf5d46dd3f25864b74e3f3110a08ab1b8c3bcfa074fc118",
+    "check_collect/review.py": "f7e4aaa3499f2004eb580c31c2373e48ca733c7d5de4d487cb326a6e3455733c",
+    "check_collect/review_pages.py": "950def907ebcd931ed3eed47b7ea85d35c0bafb8d385546a6a2356d85cba6115",
+    "check_collect/roles.py": "660a37fd9cf543ef834f13e0d9c4f9d91ac6568930f7b84d902a71b0960f3c65",
+    "check_collect/server.py": "e853b21e639da3e7f993a842f95cb7b30ae59b7651744f4602a2144f393fe9d2",
+    "check_collect/static/capture.js": "ec551e652d61070572db3b5cc41bf570656d2d5826265f906b2660d814192315",
+    "requirements-web.txt": "c9b81d673bcd53d9adde95dc48ffceb3a87630fbe40f50bb75c677ed501de9c4",
+    "scripts/get_nats.py": "166b4b537edc33cd48c51ecca2a0f47974bb0cb8388fe711c64037f00151b691",
+    "tests/test_messaging_integration.py": "f624cb1442520d7b1669c41c361835dcf4358c4e13ddd673f4bf505ab9655003",
+    "tests/test_nats_setup.py": "f975de65d09c98c5cc3058a952b893b8c4befbf03dc13b966125d4da6f02bc1a",
+    "tests/test_notification_schema.py": "3d3ab028adc940e26823457f105b010d17c9d4779ae2f6c36d80667c978b8b08",
+    "tests/test_review.py": "c572f36582bccf1b74581589df964939cc022cfda5da6babb782251c2eb7f6ab"
+  }
+}

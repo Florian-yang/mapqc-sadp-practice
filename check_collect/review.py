@@ -1,10 +1,11 @@
-"""Review issues and collector responses. Outbox delivery is a later milestone."""
+"""Review issues and collector responses with transactional notification events."""
 import hashlib
 import json
 import re
 import secrets
 import time
 from .auth import AuthError
+from .events import queue_event, queue_role
 
 STATUS = {'pending':'待核验','needs_action':'待采集者处理','disputed':'采集者已驳回'}
 
@@ -34,8 +35,7 @@ class Review:
 
     @staticmethod
     def event(db,kind,recipient,payload):
-        db.execute('INSERT INTO event_outbox VALUES(?,?,?,?,?,NULL)',
-                   (secrets.token_hex(16),kind,recipient,json.dumps(payload,ensure_ascii=False),time.time()*1000))
+        queue_event(db,kind,recipient,payload)
 
     def require_reviewer(self,uid):
         if not uid or not self.collection.has_role(uid,'reviewer'): raise AuthError('需要核验者权限')
@@ -118,6 +118,7 @@ class Review:
                     self.collection.snapshot(db,db.execute('SELECT * FROM pois WHERE id=?',(poi_id,)).fetchone(),photo_name)
                     db.execute('UPDATE issues SET status=?,response=?,responded_ms=? WHERE id=?',(action,reason,time.time()*1000,issue['id']))
                     self.event(db,'poi.resubmitted',issue['reviewer'],{'poi_id':poi_id,'issue_id':issue['id'],'revision':version,'action':action})
+                    queue_role(db,'reviewer','poi.ready_for_review',{'poi_id':poi_id,'revision':version,'action':action},exclude=(uid,issue['reviewer']))
                     db.commit()
                 except Exception:
                     if created: path.unlink(missing_ok=True)

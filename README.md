@@ -6,7 +6,7 @@
 - [逐项验收](docs/requirements.md)、[修订日程](docs/plan.md)、[架构与一图二表](docs/architecture.md)
 - [微信申请及配置](docs/wechat-setup.md)
 
-当前v0.6加入核验工作台、错误说明、采集者更新/重采/驳回和历史版本。通知事件只入待发送箱，尚未投递。真实微信和HTTPS手机相机/GPS仍待验收，见[采集说明](docs/collection-acceptance.md)与[核验说明](docs/review-acceptance.md)。聊天、中间件、地图与OCR按后续日程实现。
+当前v0.7接入真实NATS JetStream，支持系统角色群发、自动待检及错误点发，用户可查看本人通知。启动消息服务见[消息说明](docs/messaging-acceptance.md)。真实微信和HTTPS手机相机/GPS仍待验收，见[采集说明](docs/collection-acceptance.md)与[核验说明](docs/review-acceptance.md)。聊天、第三方裁决、地图与OCR按后续日程实现。
 
 ```powershell
 & 'C:/Users/flori/AppData/Local/Programs/Python/Python313/python.exe' -m check_collect.server

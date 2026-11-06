@@ -2,13 +2,13 @@
 
 ## 当前状态
 
-权威题干为docs/assignment-original.md，范围和验收状态见docs/requirements.md。11/3认证、11/4采集和11/5核验处理均有本地验证。v0.6新增错误标识、更新/重采/驳回、历史版本及通知事件待发送箱。
+权威题干为docs/assignment-original.md，范围和验收状态见docs/requirements.md。v0.7在认证、采集、核验基础上接入NATS JetStream，实现角色群发、待检与错误点发、本人通知收件箱。
 
-证据见evidence/2026-11-04与evidence/2026-11-05。照片与坐标均为合成测试数据，HTTPS手机相机/GPS、真实重采及微信仍待联调。待发送箱没有生产消费或用户收信证据，不能计作消息中间件通过；细节见docs/review-acceptance.md。
+证据按实际日期保存在evidence，11/6通过真实本机NATS子进程、TCP、发布/消费确认验证通知链路；运行方法见docs/messaging-acceptance.md。照片、位置和账号为合成样例，HTTPS手机采集/重采、真实微信及公网部署仍待联调。
 
 ## 下一步
 
-先核对Git与证据，补齐截至当天的问题，再按docs/plan.json推进。11/6接入真实消息中间件，消费既有event_outbox，验证群发、点发、重试和幂等；不把SQLite表当中间件。11/5未提前实现私聊、异议裁决、地图或OCR。HTTPS与微信条件可用后补真实设备和扫码，不重复催密钥。
+先核对Git与证据，补齐截至当天的问题，再按docs/plan.json推进。11/7实现私聊、两个角色群聊及异议转第三方现场核验和裁决；复用本轮已验证的通知链路。11/6未提前实现聊天、第三方裁决、地图或OCR。HTTPS与微信条件具备后补真实设备和扫码，不重复催密钥。
 
 ## 入口与规则
 

@@ -1,7 +1,7 @@
 {
   "title": "check@collect综合实践计划（11/3依据完整题目修订）",
   "authoritative_requirements": "docs/assignment-original.md",
-  "updated": "2026-11-05",
+  "updated": "2026-11-06",
   "summary": "移动Web/Internet POI采集核验系统，B/S与N层；现有MapQC为历史准备材料，不代表新题目功能已实现。",
   "deadline_beijing": "2026-11-11T22:30:00+08:00",
   "normal_development_until": "2026-11-09",
@@ -34,7 +34,9 @@
       "date": "11/6",
       "version": "v0.7",
       "task": "接入消息中间件，按用户/角色点发群发；系统通知和待检任务",
-      "result": "使用真实中间件验证生产消费、确认重试和幂等，不把数据库消息表冒充中间件"
+      "result": "使用真实中间件验证生产消费、确认重试和幂等，不把数据库消息表冒充中间件",
+      "status": "real_local_nats_verified; public_deployment_pending",
+      "evidence": "evidence/2026-11-06"
     },
     {
       "date": "11/7",
