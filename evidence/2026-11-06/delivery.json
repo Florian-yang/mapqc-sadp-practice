@@ -1,0 +1,12 @@
+{
+  "date_beijing": "2026-11-06",
+  "verified_at": "2026-11-06T21:48:54.523078+08:00",
+  "implementation_commit": "40fb8eb7379891793f6ff74c2551c6ab55252370",
+  "remote_main_at_verification": "40fb8eb7379891793f6ff74c2551c6ab55252370",
+  "tag": "v0.7.0",
+  "tag_object": "6b13db82bfdcfbdfced0a48a28b11aa96f1de224",
+  "remote_tag_target": "40fb8eb7379891793f6ff74c2551c6ab55252370",
+  "push_verified": true,
+  "scope": "Real local NATS JetStream notifications: 52 Python tests, 10 real broker scenarios, 6 synthetic frontend scenarios. HTTPS/mobile, WeChat and Internet deployment are pending.",
+  "receipt": "Diary and delivery receipt follow verified source/tag push. Final branch checked again after receipt push."
+}
