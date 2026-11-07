@@ -1,0 +1,12 @@
+{
+  "date_beijing": "2026-11-07",
+  "verified_at": "2026-11-07T21:55:55.534585+08:00",
+  "implementation_commit": "01b929a50d8454b24020e7002c93d6caea381285",
+  "remote_main_at_verification": "01b929a50d8454b24020e7002c93d6caea381285",
+  "tag": "v0.8.0",
+  "tag_object": "37b3d72216c9f0c18f9240911cf60ae3c4e26eb2",
+  "remote_tag_target": "01b929a50d8454b24020e7002c93d6caea381285",
+  "push_verified": true,
+  "scope": "Local chats and independent third-party recapture/verdict workflow: 95 Python tests, 12 real broker scenarios, 8 synthetic client scenarios. HTTPS/mobile, physical third-party field work, WeChat and Internet acceptance are pending.",
+  "receipt": "Diary and receipt follow verified source/tag push; final main checked after receipt push."
+}
