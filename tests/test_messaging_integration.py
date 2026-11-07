@@ -19,7 +19,9 @@ from PIL import Image
 from check_collect.auth import Store, Settings, AuthError
 from check_collect.collection import Collection
 from check_collect.review import Review
-from check_collect.roles import grant_reviewer
+from check_collect.roles import grant_reviewer, grant_role
+from check_collect.chat import Chat
+from check_collect.disputes import Disputes
 from check_collect.events import queue_event
 from check_collect.notifications import Notifications
 from check_collect.messaging import Messaging, STREAM, wire
@@ -233,3 +235,37 @@ class MessagingIntegrationTests(unittest.IsolatedAsyncioTestCase):
         consumer.config.max_deliver=-1
         await self.worker.js.add_consumer(STREAM,config=consumer.config)
         await self.new_worker()
+
+    async def test_chat_and_final_arbitration_notifications_reach_parties(self):
+        chat=Chat(self.collection);disputes=Disputes(self.collection)
+        staff,_=self.store.local_account('third_party','synthetic-password-123',True)
+        grant_role(self.store,staff,'third_party')
+        poi=self.collection.create(self.owner,self.capture())
+        issue=self.review.report(self.reviewer,poi,1,'招牌不清楚')
+        room=chat.open_private(self.owner,issue)
+        chat.send(self.owner,room,'请说明错误位置','private-owner-1')
+        chat.send(self.reviewer,room,'需要重拍招牌','private-reviewer-1')
+        chat.send(self.owner,'collectors','分享采集技巧','collector-group-1')
+        chat.send(self.reviewer,'reviewers','分享核验技巧','reviewer-group-1')
+        self.review.respond(self.owner,poi,dict(action='reject',issue_id=issue,revision=1,reason='双方未能达成一致'))
+        case=disputes.file(self.owner,issue,'请第三方现场核验')
+        value={**self.capture(),'capture_id':'third-party-recapture-0002','revision':1,'decision':'error_confirmed','reason':'根据重采结果确认原错误标识'}
+        disputes.finalize(staff,case,value)
+        with self.assertRaises(AuthError):disputes.finalize(staff,case,value)
+        self.assertEqual(await self.worker.run_once(),{'published':11,'received':11})
+        self.assertEqual([len(self.notices.list_owned(uid)) for uid in [self.owner,self.other,self.reviewer,self.reviewer2,staff,self.ordinary]],[3,1,4,2,1,0])
+        for uid in (self.owner,self.reviewer):
+            final=[r for r in self.notices.list_owned(uid) if r['event_type']=='dispute.finalized']
+            self.assertEqual(len(final),1);self.assertEqual(final[0]['payload']['decision'],'error_confirmed')
+            self.assertIn('/dispute/'+case,self.notices.page(uid))
+        self.assertEqual(disputes.detail(staff,case)['case']['status'],'finalized')
+
+    async def test_chat_role_revocation_does_not_leak_text_in_notification(self):
+        chat=Chat(self.collection)
+        secret='合成的群内讨论内容'
+        chat.send(self.owner,'collectors',secret,'group-privacy-1')
+        with self.store.connect() as db:db.execute("DELETE FROM user_roles WHERE user_id=? AND role='collector'",(self.other,))
+        self.assertEqual(await self.worker.run_once(),{'published':1,'received':1})
+        self.assertNotIn(secret,json.dumps(self.notices.list_owned(self.other),ensure_ascii=False))
+        self.assertNotIn(secret,self.notices.page(self.other))
+        with self.assertRaises(AuthError):chat.messages(self.other,'collectors')

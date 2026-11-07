@@ -100,7 +100,7 @@ class Collection:
     @staticmethod
     def capture_used(db,uid,capture_id):
         return any(json.loads(r['snapshot'])['capture_id']==capture_id for r in db.execute(
-            'SELECT v.snapshot FROM poi_versions v JOIN pois p ON p.id=v.poi_id WHERE p.owner=?',(uid,)))
+            "SELECT v.snapshot FROM poi_versions v JOIN pois p ON p.id=v.poi_id WHERE p.owner=? OR json_extract(v.snapshot,'$.captured_by')=?",(uid,uid)))
 
     @staticmethod
     def metadata(value):
@@ -153,7 +153,14 @@ class Collection:
         if revision is not None and (type(revision) is not int or not 1<=revision<=2147483647): raise AuthError('照片版本无效')
         with self.store.connect() as db:
             row=db.execute('SELECT owner,revision FROM pois WHERE id=?',(poi_id,)).fetchone()
-            if not uid or not row or not (row['owner']==uid or self.has_role(uid,'reviewer')): raise AuthError('照片不存在或无权访问')
+            if not row or not self.can_read(db,uid,poi_id,row['owner']): raise AuthError('照片不存在或无权访问')
             version=db.execute('SELECT photo_name FROM poi_versions WHERE poi_id=? AND revision=?',(poi_id,revision if revision is not None else row['revision'])).fetchone()
             if not version: raise AuthError('照片版本不存在')
         return (self.photos/version['photo_name']).read_bytes()
+
+    def can_read(self,db,uid,poi_id,owner):
+        if not uid:return False
+        if uid==owner or self.has_role(uid,'reviewer'):return True
+        if not self.has_role(uid,'third_party'):return False
+        if not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='disputes'").fetchone():return False
+        return bool(db.execute('SELECT 1 FROM disputes WHERE poi_id=? AND assignee=?',(poi_id,uid)).fetchone())

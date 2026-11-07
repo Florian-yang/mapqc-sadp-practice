@@ -1,7 +1,7 @@
 {
   "title": "check@collect综合实践计划（11/3依据完整题目修订）",
   "authoritative_requirements": "docs/assignment-original.md",
-  "updated": "2026-11-06",
+  "updated": "2026-11-07",
   "summary": "移动Web/Internet POI采集核验系统，B/S与N层；现有MapQC为历史准备材料，不代表新题目功能已实现。",
   "deadline_beijing": "2026-11-11T22:30:00+08:00",
   "normal_development_until": "2026-11-09",
@@ -42,7 +42,9 @@
       "date": "11/7",
       "version": "v0.8",
       "task": "采集者核验者私聊、两个角色群聊；异议转第三方与最终裁决",
-      "result": "验证权限、争议提交、第三方现场重采核验、双方结果通知；用完整场景走查"
+      "result": "验证权限、争议提交、第三方现场重采核验、双方结果通知；用完整场景走查",
+      "status": "local_workflow_verified; real_broker_verified; physical_third_party_recapture_pending",
+      "evidence": "evidence/2026-11-07"
     },
     {
       "date": "11/8",

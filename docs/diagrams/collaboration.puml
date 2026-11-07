@@ -1,0 +1,36 @@
+@startuml
+title 讨论、异议和第三方重采
+actor 采集者
+actor 原核验者
+actor 指定第三方
+boundary Web
+control Chat
+control Disputes
+control 消息进程
+database "POI / 错误 / 版本 / 待发送箱" as DB
+queue "NATS JetStream" as MQ
+database "本人收件箱" as Inbox
+采集者 -> Web : 围绕错误发起私聊
+Web -> Chat : open_private / send
+Chat -> DB : 校验参与者、保存消息与通知事件
+原核验者 -> Web : 回复、进入核验者群
+Web -> Chat : 按当前角色读写群聊
+采集者 -> Web : 复核后驳回，提交异议说明
+Web -> Disputes : file
+Disputes -> DB : 排除当事人，指派独立第三方、写通知事件
+消息进程 -> DB : 读取待发送事件
+消息进程 -> MQ : 发布事件
+MQ --> 消息进程 : 第三方任务通知
+消息进程 -> Inbox : 保存通知后确认消费
+消息进程 -> MQ : 消费确认
+指定第三方 -> Web : 新拍照、自动定位、填写结论
+Web -> Disputes : finalize
+Disputes -> DB : 校验指定人 / 版本 / 新采集
+Disputes -> DB : 同事务保存最终版本、裁决和双方通知
+消息进程 -> DB : 读取双方结果事件
+消息进程 -> MQ : 发布结果通知
+MQ --> 消息进程 : 双方结果通知
+消息进程 -> Inbox : 保存结果通知
+消息进程 -> MQ : 入箱后确认消费
+note over Web, Disputes : 两种裁决均保留第三方新采集版本\n真机与现场操作待实际演示
+@enduml

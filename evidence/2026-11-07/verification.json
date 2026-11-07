@@ -1,0 +1,73 @@
+{
+  "verified_at": "2026-11-07T21:52:50.454209+08:00",
+  "trigger_beijing": "2026-11-07T21:34:18.928+08:00",
+  "version": "0.8.0",
+  "python_tests_passed": 95,
+  "python_tests_skipped": 0,
+  "new_chat_service_tests": 14,
+  "new_dispute_service_tests": 23,
+  "new_collaboration_http_tests": 4,
+  "real_broker_scenarios": 12,
+  "new_broker_scenarios": 2,
+  "client_scenarios_passed": 8,
+  "checks": [
+    {
+      "name": "python-tests",
+      "exit_code": 0
+    },
+    {
+      "name": "client-tests",
+      "exit_code": 0
+    },
+    {
+      "name": "diff-check",
+      "exit_code": 0
+    }
+  ],
+  "scope": "Issue-private chat, two role groups, independent assignee, third-party capture and final verdict, immutable source/history, NATS notices to parties",
+  "http": "Real loopback HTTP for both final decision outcomes, permissions, form handling, photo access, and terminal status",
+  "broker": "Independent real NATS server subprocesses/TCP/JetStream; scenario receipts reconcile outbox, inbox and acknowledgements",
+  "broker_binary_sha256": "a7785bc14837679c6653a6c8090c79e4c4f7b28a5f7f144f3a734248a302ac41",
+  "nats_client": "2.16.0",
+  "test_data": "Synthetic actors, photos, coordinates and browser device APIs; no real field work inferred",
+  "pending_external": [
+    "WeChat application/domain",
+    "HTTPS mobile camera/GPS/recollection",
+    "third-party physical field recapture and verification",
+    "Internet deployment and demonstration"
+  ],
+  "not_implemented_today": [
+    "map",
+    "route/navigation",
+    "OCR"
+  ],
+  "source_sha256": {
+    "check_collect/__init__.py": "a710cc1a8c481c13fb5a058ff32703765ee2096ad766ef226ad48eaf214a1917",
+    "check_collect/auth.py": "8ed9fb05a46f69abf983a371ec2c12d48f31790bd315b3cc610fadddfaf2acd1",
+    "check_collect/chat.py": "6d77fb2a5c6440cdb12f6fd266c7645b555e4bb33f5cbc2bef5b34ef96b655bd",
+    "check_collect/chat_pages.py": "264fffa70055f34e1a76e04dff3f8fe4951247906e4bbad15822580d8b3343e4",
+    "check_collect/collection.py": "c185f40e47532c224ed1bff982ca183187e044e7e62f08c9882464cf29b444a5",
+    "check_collect/dispute_pages.py": "ccf5521311d11f34f83d2c1e6145d58d6970c003372b63f0981f7b3a2a35aa7a",
+    "check_collect/disputes.py": "d4db2d35791630a873eba7711b1baa6aeeec3e64704455ba979bba45546d17c8",
+    "check_collect/events.py": "a718338964de268f0d28803342c7bd77773298b0e5ae933b75a267318e8baed2",
+    "check_collect/messaging.py": "378d692afa24a90ae98ef4736e1616a451c1d6563fe140960b12606e2274edb7",
+    "check_collect/notifications.py": "fa17b0a911828f58442ac1adaa237ebbf733faae4d25dde4e4b3d3374288361d",
+    "check_collect/review.py": "fb1a945eb000432aef0c4211c7492f40f1dd593c8a047dddd31376e61d94a3ac",
+    "check_collect/review_pages.py": "eec8b356e38ff25a2187546889d60393ee3f06c0568f3e279d0dacf2d1607f4e",
+    "check_collect/roles.py": "7509e39d6c8f3e28c472b9ac5a951622633a13cb1cb19eca566da922b547a1b4",
+    "check_collect/server.py": "138ba65c067ad0a9d691d8c1ee04ec1c584f8e9f99e6d0ee32ba9419963e898e",
+    "check_collect/static/capture.js": "ba2429f60242a7907c150122ec7689dda81268473e672de34ee8c9e434eeccdf",
+    "tests/capture_client_test.cjs": "1f4bbdcfe56a563d9e4bf01f84ca4f24267bfead8b3f4b5452a699f9ae385049",
+    "tests/test_chat.py": "3ad933e987b4ce11d6e6fd9d3bf96a69f6819cf9391b74590351ae177ee7b18b",
+    "tests/test_collaboration_http.py": "725eebb322c521298886396e14bcd814d1d3919c7afc9f14fa1574eea203d0ff",
+    "tests/test_collection.py": "c3e67ec3763a6a7b399386ece526b34bf4a21480c5072d95ffebad1bdae35ea7",
+    "tests/test_disputes.py": "b8e3587dacc2ff52cc1493a1f346f6d8dea3f25844efad82c30790525c1ed850",
+    "tests/test_loaders.py": "0a1bcfe4579ae86db8bbe472bddc107731b461608073d51dba730b9c633b79d8",
+    "tests/test_local_http.py": "2c549895f146c5975d70f6cbf9ddbccf1a1be72a896690181c94388c6856c8a2",
+    "tests/test_messaging_integration.py": "57b4c0f3c8d2e06ec6fda2a8ffae334191387b3f1bde6e68002fa210553c94e7",
+    "tests/test_nats_setup.py": "f975de65d09c98c5cc3058a952b893b8c4befbf03dc13b966125d4da6f02bc1a",
+    "tests/test_notification_schema.py": "3d3ab028adc940e26823457f105b010d17c9d4779ae2f6c36d80667c978b8b08",
+    "tests/test_review.py": "c572f36582bccf1b74581589df964939cc022cfda5da6babb782251c2eb7f6ab",
+    "tests/test_wechat.py": "cdb30860a8b4472e8b0244074cb1513ed470c67634fcc44b2054b0a96ebb6a00"
+  }
+}

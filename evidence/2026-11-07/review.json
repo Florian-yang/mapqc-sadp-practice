@@ -1,0 +1,20 @@
+{
+  "reviewer": "independent read-only agent day7_review",
+  "verdict": "PASS after targeted correction",
+  "code_finding": "Actor capture_id history ignored snapshot.captured_by for third-party recapture reused after collector enrollment",
+  "correction": "capture_used includes original owner or snapshot.captured_by; new regression rejects ordinary create and recollect reuse with unchanged DB/events/photos",
+  "regression_evidence": "Test agent reproduced the failure with original query patched only within test process; restored new logic passed 23 dispute tests",
+  "prose_corrections": [
+    "clarify each message or verdict shares a transaction with its own notifications",
+    "clarify diary precheck push was the 11/6 version"
+  ],
+  "final_checks": {
+    "python": 95,
+    "skipped": 0,
+    "real_broker": 12,
+    "client": 8
+  },
+  "reviewed_at": "2026-11-07T21:49:06.728558+08:00",
+  "additional_fix": "Idempotent HTTP capture replies now query actual POI status instead of hard-coded pending; HTTP assertions preserve needs_action/finalized with unchanged complete records",
+  "final_verified_at": "2026-11-07T21:52:50.454209+08:00"
+}

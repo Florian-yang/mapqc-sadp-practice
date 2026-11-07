@@ -13,7 +13,9 @@ from .auth import Settings, Store, WeChat, AuthError
 from .collection import Collection, CATEGORIES, MAX_BODY
 from .review import Review
 from .notifications import Notifications
-from . import review_pages
+from .chat import Chat
+from .disputes import Disputes, DECISIONS
+from . import review_pages, chat_pages, dispute_pages
 
 
 def application(settings: Settings, provider=None):
@@ -21,6 +23,8 @@ def application(settings: Settings, provider=None):
     collection = Collection(store)
     review = Review(collection)
     notifications = Notifications(store)
+    chat = Chat(collection)
+    disputes = Disputes(collection)
     provider = provider or WeChat(settings)
     attempts = {}
     attempts_lock = threading.Lock()
@@ -92,6 +96,10 @@ def application(settings: Settings, provider=None):
                     if collection.has_role(uid,'reviewer'):
                         body += '<p><a href="/review">核验工作台</a></p>'
                     body += '<p><a href="/notifications">我的通知</a></p>'
+                    if any(collection.has_role(uid,r) for r in ('collector','reviewer')):
+                        body += '<p><a href="/chats">工作讨论</a></p>'
+                    if any(collection.has_role(uid,r) for r in ('collector','reviewer','third_party')):
+                        body += '<p><a href="/disputes">异议处理</a></p>'
                 elif settings.configured:
                     body = '<p>POI数据采集与核验</p><p>使用微信身份登录，首次授权后建立本系统账号。</p><form action="/auth/wechat/login" method="post"><button>微信扫码登录</button></form>'
                 else:
@@ -99,6 +107,17 @@ def application(settings: Settings, provider=None):
                 if not uid:
                     body += '<hr><p>也可先建立本系统账号，随后绑定微信。</p><form action="/auth/local/login" method="post"><p><label>账号 <input name="username" required minlength="3" maxlength="40" autocomplete="username"></label></p><p><label>密码 <input type="password" name="password" required minlength="12" maxlength="128" autocomplete="current-password"></label></p><button>账号登录</button> <button formaction="/auth/local/register">注册账号</button></form>'
                 self.reply(200, self.page(body))
+            elif path=='/chats' or path.startswith('/chat/') or path in ('/disputes','/api/disputes') or path.startswith(('/dispute/','/api/disputes/')):
+                try:
+                    if not uid:self.reply_error(401,'请先登录');return
+                    if path=='/chats':self.reply(200,self.page(chat_pages.listing(chat,uid)))
+                    elif path.startswith('/chat/') and len(path.split('/'))==3:self.reply(200,self.page(chat_pages.room(chat,uid,path.split('/')[2])))
+                    elif path=='/disputes':self.reply(200,self.page(dispute_pages.listing(disputes,uid)))
+                    elif path=='/api/disputes':self.reply(200,json.dumps(disputes.list_owned(uid),ensure_ascii=False),content_type='application/json; charset=utf-8')
+                    elif path.startswith('/dispute/') and len(path.split('/'))==3:self.reply(200,self.page(dispute_pages.detail(disputes,uid,path.split('/')[2])))
+                    elif path.startswith('/api/disputes/') and len(path.split('/'))==4:self.reply(200,json.dumps(disputes.detail(uid,path.split('/')[3]),ensure_ascii=False),content_type='application/json; charset=utf-8')
+                    else:self.reply(404)
+                except AuthError as exc:self.reply_error(403,str(exc))
             elif path in ('/notifications','/api/notifications'):
                 if not uid:
                     self.reply_error(401,'请先登录');return
@@ -113,7 +132,7 @@ def application(settings: Settings, provider=None):
                     if path=='/review': self.reply(200,self.page(review_pages.listing(review,uid,True)))
                     elif path=='/api/review': self.reply(200,json.dumps(review.queue(uid),ensure_ascii=False),content_type='application/json; charset=utf-8')
                     elif path.startswith('/poi/') and len(path.split('/'))==3:
-                        self.reply(200,self.page(review_pages.history(review.detail(uid,path.split('/')[2]))))
+                        self.reply(200,self.page(review_pages.history(review.detail(uid,path.split('/')[2]),uid)))
                     elif path.startswith('/api/review/') and len(path.split('/'))==4:
                         self.reply(200,json.dumps(review.detail(uid,path.split('/')[3]),ensure_ascii=False),content_type='application/json; charset=utf-8')
                     else:self.reply(404)
@@ -123,12 +142,21 @@ def application(settings: Settings, provider=None):
                 try:
                     if not uid:
                         self.reply(401,self.page('<p>请先登录</p><a href="/">登录</a>'));return
-                    if not path.endswith('/photo'): collection._require(uid)
+                    query=parse_qs(urlsplit(self.path).query)
+                    arbitration_capture=path=='/collect' and set(query)=={'dispute_id'}
+                    if not path.endswith('/photo') and not arbitration_capture: collection._require(uid)
                     if path == '/collect':
                         options=''.join(f'<option value="{k}">{v}</option>' for k,v in CATEGORIES.items())
                         content='<p><a href="/">账号</a> · <a href="/my-pois">我的采集</a></p><h2>采集POI</h2><p>打开相机后拍照，系统自动取得设备位置；定位成功后才能上传。</p><video autoplay playsinline muted style="width:100%;max-height:300px"></video><canvas hidden></canvas><p><button type="button" id="open-camera">打开相机</button> <button type="button" id="take-photo" disabled>拍照并自动定位</button></p><p id="notice" role="status"></p><img id="preview" alt="拍照预览" style="max-width:100%"><form id="capture-form"><p><label>POI名称 <input name="name" required maxlength="120"></label></p><p><label>类别 <select name="category">'+options+'</select></label></p><p><label>基本描述 <textarea name="description" required maxlength="1000" rows="3" style="width:100%;box-sizing:border-box"></textarea></label></p><button id="upload" disabled>上传照片与位置</button></form><script src="/static/capture.js" defer></script>'
                         query=parse_qs(urlsplit(self.path).query)
-                        if query:
+                        if arbitration_capture:
+                            if len(query['dispute_id'])!=1:raise AuthError('重采任务无效')
+                            data=disputes.capture_context(uid,query['dispute_id'][0]);case=data['case']
+                            attrs=f'id="capture-form" data-dispute-id="{case["id"]}" data-revision="{case["based_revision"]}"'
+                            content=content.replace('id="capture-form"',attrs).replace('<h2>采集POI</h2>','<h2>第三方重采与核验</h2>')
+                            choices=''.join(f'<option value="{k}">{v}</option>' for k,v in DECISIONS.items())
+                            content=content.replace('<button id="upload"','<p><label>核验结论 <select name="decision">'+choices+'</select></label></p><p><label>核验说明 <textarea name="reason" required maxlength="1000"></textarea></label></p><button id="upload"')
+                        elif query:
                             if set(query)!={'poi_id','issue_id','revision'} or any(len(v)!=1 for v in query.values()): raise AuthError('重采请求无效')
                             detail=review.detail(uid,query['poi_id'][0]);row=detail['poi']
                             issue=next((x for x in detail['issues'] if x['id']==query['issue_id'][0] and x['status']=='open'),None)
@@ -183,14 +211,41 @@ def application(settings: Settings, provider=None):
                 length = -1
             local = path in ('/auth/local/login', '/auth/local/register')
             response_json=path.startswith('/api/review/') and path.endswith('/respond') and len(path.split('/'))==5
+            finalize_json=path.startswith('/api/disputes/') and path.endswith('/finalize') and len(path.split('/'))==5
+            collaboration_form=path in ('/chats/open','/disputes/file') or (path.startswith('/chat/') and path.endswith('/send') and len(path.split('/'))==4)
             workflow=path in ('/review/report','/review/respond')
-            upload = path == '/api/pois' or response_json
-            if self.headers.get('Transfer-Encoding') or not 0 <= length <= (MAX_BODY if upload else 16384 if workflow else 4096) or (not local and not upload and not workflow and length):
+            upload = path == '/api/pois' or response_json or finalize_json
+            if self.headers.get('Transfer-Encoding') or not 0 <= length <= (MAX_BODY if upload else 16384 if workflow or collaboration_form else 4096) or (not local and not upload and not workflow and not collaboration_form and length):
                 self.close_connection = True
                 self.reply_error(400,'请求内容长度或格式无效')
                 return
             session = self.cookies().get('cc_session', '')
-            if path.startswith('/notifications/') and path.endswith('/read') and len(path.split('/'))==4:
+            if collaboration_form or finalize_json:
+                uid=store.user(session)
+                if not uid:self.reply_error(401,'请先登录');self.close_connection=True;return
+                try:
+                    raw=self.rfile.read(length).decode('utf-8')
+                    if finalize_json:
+                        if self.headers.get('Content-Type','').split(';')[0]!='application/json':raise AuthError('请求格式须为JSON')
+                        case_id=path.split('/')[3]
+                        revision=disputes.finalize(uid,case_id,json.loads(raw))
+                        self.reply(200,json.dumps({'id':case_id,'revision':revision}),content_type='application/json; charset=utf-8')
+                    else:
+                        if self.headers.get('Content-Type','').split(';')[0]!='application/x-www-form-urlencoded':raise AuthError('表单格式无效')
+                        parsed=parse_qs(raw,max_num_fields=5)
+                        if any(len(v)!=1 for v in parsed.values()):raise AuthError('表单字段重复')
+                        value={k:v[0] for k,v in parsed.items()}
+                        if path=='/chats/open':
+                            room_id=chat.open_private(uid,value.get('issue_id'));target='/chat/'+room_id
+                        elif path=='/disputes/file':
+                            case_id=disputes.file(uid,value.get('issue_id'),value.get('reason'));target='/dispute/'+case_id
+                        else:
+                            room_id=path.split('/')[2]
+                            chat.send(uid,room_id,value.get('text'),value.get('request_id'));target='/chat/'+room_id
+                        self.reply(303,location=target)
+                except (AuthError,ValueError) as exc:self.reply_error(400,str(exc) if isinstance(exc,AuthError) else '处理内容无效')
+                except OSError:self.reply_error(500,'保存失败，请稍后重试')
+            elif path.startswith('/notifications/') and path.endswith('/read') and len(path.split('/'))==4:
                 uid=store.user(session)
                 if not uid:
                     self.reply_error(401,'请先登录');return
@@ -232,7 +287,9 @@ def application(settings: Settings, provider=None):
                         if self.headers.get('Content-Type','').split(';')[0]!='application/json': raise AuthError('上传格式须为JSON')
                         value=json.loads(self.rfile.read(length).decode('utf-8'))
                         poi_id=collection.create(uid,value)
-                        self.reply(201,json.dumps({'id':poi_id,'status':'pending'}),content_type='application/json; charset=utf-8')
+                        with store.connect() as db:
+                            status=db.execute('SELECT status FROM pois WHERE id=? AND owner=?',(poi_id,uid)).fetchone()['status']
+                        self.reply(201,json.dumps({'id':poi_id,'status':status}),content_type='application/json; charset=utf-8')
                     else:
                         collection.enroll(uid);self.reply(303,location='/collect')
                 except (AuthError,ValueError) as exc:

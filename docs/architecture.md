@@ -1,17 +1,18 @@
 # check@collect目标架构
 
-依据完整题目，采用移动浏览器与桌面浏览器共用的B/S结构，服务器按界面接入、业务、数据访问分层。11/6已实现认证、采集、核验及系统通知；图中聊天、第三方、地图和OCR仍为目标。
+依据完整题目，采用移动浏览器与桌面浏览器共用的B/S结构，服务器按界面接入、业务、数据访问分层。11/7已实现认证、采集、核验、讨论与异议处理及系统通知；地图和OCR留11/8。
 
 ```mermaid
 flowchart TB
   web[移动Web / 桌面浏览器] --> http[HTTP控制器]
   http --> auth[账号认证与微信适配]
-  http --> poi[Collection采集 / Review核验 · 争议裁决待实现]
-  http --> chat[私聊 / 两个群聊 · 待实现]
+  http --> poi[Collection采集 / Review核验 / Disputes异议]
+  http --> chat[Chat私聊 / 两个角色群]
   auth --> db[(SQLite账号与会话)]
   auth --> wx[微信开放平台]
   poi --> store[(POI / 错误 / 版本 / 照片)]
   poi --> outbox[业务事件待发送箱]
+  chat --> outbox
   outbox --> mq[NATS JetStream · 本机已验证]
   mq --> delivery[角色群发 / 用户点发 / 本人收件箱]
   delivery --> web
@@ -23,8 +24,8 @@ flowchart TB
 |---|---|---|
 | Web表现和控制 | server、capture.js及核验页面已实现 | 接收操作、显示结果，不在浏览器保存应用密钥 |
 | 认证与外部适配 | WeChat、Store已实现 | OAuth身份核验、账号关联、会话，不承担采集核验权限授权 |
-| POI与争议服务 | Collection、Review已实现；第三方处理待开发 | 采集版本、错误标识、更新/重采/驳回，禁止越权和本人核验 |
-| 通信与中间件 | NATS消息适配、event_outbox、本人收件箱已实现；聊天待11/7 | 角色广播、个人通知已验证；SQLite仅保存业务事件和收件数据，NATS承担实际传输 |
+| POI与争议服务 | Collection、Review、Disputes | 版本、核验与重采、独立第三方指派和最终结论；按参与关系限制访问 |
+| 通信与中间件 | Chat、NATS消息适配、event_outbox与收件箱 | 两个角色群和问题私聊；SQLite保存业务数据，NATS承担实际通知传输 |
 | 外部地图与OCR | 待接入 | 隔离供应商API与数据格式，保留真实调用证据 |
 
 | 质量权衡（表2） | 设计做法 | 边界与验证 |
@@ -51,3 +52,7 @@ Review复用Collection的图片与位置校验，通过版本号和状态约束�
 ## 11月6日实现进度
 
 事件写入与业务共用事务，NATS适配独立处理发布与消费确认。角色群发在创建事件时确定接收者，本人通知接口按登录用户过滤。发布去重有时间窗，收件箱还以事件ID约束重复消费；送达、已读分别记录。仅本机NATS及进程恢复完成验证，公网与高可用尚未验证。见[消息时序](diagrams/notifications.puml)。
+
+## 11月7日实现进度
+
+Chat按当前角色控制群聊，私聊参与者从原错误记录确定。Disputes排除双方账号后指派第三方，重采数据经Collection校验，终裁、快照与双方通知在同一事务保存。照片历史记录实际采集账号，重复请求不重复发消息或裁决。现场重采列入演示验收；结构调用见[讨论与异议时序](diagrams/collaboration.puml)。

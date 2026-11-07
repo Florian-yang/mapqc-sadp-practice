@@ -7,7 +7,7 @@ import time
 from .auth import AuthError
 from .events import queue_event, queue_role
 
-STATUS = {'pending':'待核验','needs_action':'待采集者处理','disputed':'采集者已驳回'}
+STATUS = {'pending':'待核验','needs_action':'待采集者处理','disputed':'采集者已驳回','under_arbitration':'第三方处理中','finalized':'第三方已裁决'}
 
 
 class Review:
@@ -54,7 +54,7 @@ class Review:
     def detail(self,uid,poi_id):
         with self.store.connect() as db:
             row=db.execute('SELECT * FROM pois WHERE id=?',(poi_id,)).fetchone()
-            if not uid or not row or not (row['owner']==uid or self.collection.has_role(uid,'reviewer')):
+            if not row or not self.collection.can_read(db,uid,poi_id,row['owner']):
                 raise AuthError('记录不存在或无权访问')
             return {'poi':dict(row),'issues':[dict(r) for r in db.execute('SELECT * FROM issues WHERE poi_id=? ORDER BY created_ms',(poi_id,))],
                     'versions':[json.loads(r['snapshot']) for r in db.execute('SELECT snapshot FROM poi_versions WHERE poi_id=? ORDER BY revision',(poi_id,))]}

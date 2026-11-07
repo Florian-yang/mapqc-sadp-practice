@@ -37,20 +37,25 @@ def listing(review,uid,reviewer=False):
             content+=f'<p><a href="/collect?{query}">重新拍照采集</a></p>'
             content+='<form action="/review/respond" method="post">'+hidden(row,issue)+fields(row)+'<p><label>处理说明 <textarea name="reason" required maxlength="1000"></textarea></label></p><button name="action" value="update">更新信息并重送核验</button> <button name="action" value="reject">驳回错误标识</button></form>'
         elif row['status']=='disputed':
-            content+='<p>驳回已记录，双方讨论与第三方处理入口按后续计划开发。</p>'
+            content+='<p>驳回已记录，可在处理记录中私聊讨论或提交异议。</p>'
         content+='</article><hr>'
     return content
 
 
-def history(detail):
+def history(detail,uid=None):
     row=detail['poi']
     content=f'<p><a href="/">账号</a> · <a href="/my-pois">我的采集</a> · <a href="/review">核验工作台</a></p><h2>{escape(row["name"])}</h2><p>当前：{STATUS[row["status"]]}</p><h3>处理记录</h3>'
     if not detail['issues']: content+='<p>尚无错误记录</p>'
-    labels={'open':'待处理','update':'已更新','recollect':'已重新采集','reject':'已驳回'}
+    labels={'open':'待处理','update':'已更新','recollect':'已重新采集','reject':'已驳回','finalized':'第三方已裁决'}
     for issue in detail['issues']:
         content+=f'<p>针对版本{issue["based_revision"]}：{escape(issue["description"])}（{labels[issue["status"]]}）</p>'
         if issue['response']: content+='<p>采集者说明：'+escape(issue['response'])+'</p>'
+        if uid in (row['owner'],issue['reviewer']):
+            content+=f'<form action="/chats/open" method="post"><input type="hidden" name="issue_id" value="{issue["id"]}"><button>私聊讨论这项错误</button></form>'
+            if issue['status']=='reject' and row['status']=='disputed':
+                content+=f'<form action="/disputes/file" method="post"><input type="hidden" name="issue_id" value="{issue["id"]}"><p><label>异议说明 <textarea name="reason" required maxlength="1000"></textarea></label></p><button>提交第三方核验</button></form>'
     content+='<h3>采集版本</h3>'
     for version in detail['versions']:
+        if version.get('dispute_id'):content+='<p>第三方重采结果</p>'
         content+=f'<h4>版本{version["revision"]}：{escape(version["name"])}</h4><p>{CATEGORIES[version["category"]]} · {escape(version["description"])}</p><p>位置：{version["latitude"]:.6f}, {version["longitude"]:.6f}</p><img alt="历史版本照片" style="max-width:100%" src="/api/pois/{row["id"]}/photo?revision={version["revision"]}">'
     return content
