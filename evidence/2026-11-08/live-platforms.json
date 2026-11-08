@@ -1,0 +1,32 @@
+{
+  "verified_at": "2026-11-08T21:53:41.049643+08:00",
+  "data": "Synthetic sign, POI and WGS84 Wuhan coordinates; not a physical visit",
+  "route": {
+    "http_status": 200,
+    "provider": "OSRM",
+    "distance_m": 1189.4,
+    "duration_s": 191.3,
+    "geometry_type": "LineString",
+    "geometry_points": 76,
+    "steps": 8,
+    "coordinate_system": "WGS84",
+    "error": null
+  },
+  "ocr": {
+    "http_status": 200,
+    "provider": "OCR.Space",
+    "language": "auto",
+    "partial": false,
+    "text": "MAPQC SHOP 42\n兴旺商店",
+    "suggested_category": "shop",
+    "error": null,
+    "test_key_only": true,
+    "personal_key_configured": false,
+    "contains_english": true,
+    "contains_chinese": true
+  },
+  "category_after_ocr": "other",
+  "revision_after_ocr": 1,
+  "photo_sha256": "9f17d8cbb23f522e5f9449e2198bcb800eb309828604033e229739479540fe8a",
+  "phone_gps_camera_and_arrival": "not exercised"
+}

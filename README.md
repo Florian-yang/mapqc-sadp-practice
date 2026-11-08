@@ -6,7 +6,7 @@
 - [逐项验收](docs/requirements.md)、[修订日程](docs/plan.md)、[架构与一图二表](docs/architecture.md)
 - [微信申请及配置](docs/wechat-setup.md)
 
-当前v0.8支持问题私聊、两个角色群、第三方重采裁决和结果通知，见[讨论与异议说明](docs/collaboration-acceptance.md)。启动NATS及消息服务见[消息说明](docs/messaging-acceptance.md)。微信、HTTPS手机及第三方现场演示待验收；地图和OCR按11/8计划推进。
+当前v0.9接入地图、OSRM驾车路线与OCR.Space照片识别，见[地图与OCR说明](docs/map-ocr-acceptance.md)。私聊、群聊及第三方流程见[讨论与异议说明](docs/collaboration-acceptance.md)，NATS运行见[消息说明](docs/messaging-acceptance.md)。个人OCR Key尚未配置；微信、HTTPS手机与现场演示待验收。
 
 ```powershell
 & 'C:/Users/flori/AppData/Local/Programs/Python/Python313/python.exe' -m check_collect.server

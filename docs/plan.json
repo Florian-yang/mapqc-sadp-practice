@@ -1,7 +1,7 @@
 {
   "title": "check@collect综合实践计划（11/3依据完整题目修订）",
   "authoritative_requirements": "docs/assignment-original.md",
-  "updated": "2026-11-07",
+  "updated": "2026-11-08",
   "summary": "移动Web/Internet POI采集核验系统，B/S与N层；现有MapQC为历史准备材料，不代表新题目功能已实现。",
   "deadline_beijing": "2026-11-11T22:30:00+08:00",
   "normal_development_until": "2026-11-09",
@@ -50,7 +50,9 @@
       "date": "11/8",
       "version": "v0.9",
       "task": "地图按类别显示分布/错误/进展，路径与导航；OCR API辅助分类",
-      "result": "外部地图、路线与OCR真实调用留证；无密钥项明确待联调，不用静态假结果算通过"
+      "result": "地图、权限、版本及失败分支本地验证；真实OSRM路线和OCR中英文响应留证。个人Key、手机现场导航与浏览器OCR结果展示待验收。",
+      "status": "local_verified; real_osrm_verified; real_ocr_public_test_key_verified; personal_key_and_physical_navigation_pending; browser_ocr_result_pending",
+      "evidence": "evidence/2026-11-08"
     },
     {
       "date": "11/9",

@@ -1,0 +1,35 @@
+@startuml
+title 地图查询、路线与照片识别
+actor 用户
+boundary "移动Web" as Web
+control "HTTP控制器" as HTTP
+control Maps
+control Ocr
+database "POI / 版本 / 照片 / OCR缓存" as DB
+participant "OSRM适配器" as Route
+participant "OCR.Space适配器" as Text
+用户 -> Web : 类别、进展查询
+Web -> HTTP : GET /api/map
+HTTP -> Maps : 校验登录角色
+Maps -> DB : 按访问权限和条件查询
+Maps --> Web : GeoJSON点位和状态
+用户 -> Web : 导航至选定POI
+Web -> Web : 获取设备位置
+Web -> HTTP : 起点及POI编号
+HTTP -> Maps : route
+Maps -> DB : 核对权限与目标版本
+Maps -> Route : WGS84起终点、驾车路线
+Route --> Maps : 道路折线和步骤
+Maps -> DB : 再次核对权限与目标版本
+Maps --> Web : 路线、距离与指引
+用户 -> Web : 查看照片，确认文字识别
+Web -> HTTP : POI编号、预期版本、确认
+HTTP -> Ocr : recognize
+Ocr -> DB : 核对权限、版本、照片摘要及缓存
+alt 本版本无缓存
+  Ocr -> Text : 选定照片和语言
+  Text --> Ocr : 识别文字
+  Ocr -> DB : 复核权限、版本及照片，保存结果
+end
+Ocr --> Web : 文字与类别建议
+@enduml

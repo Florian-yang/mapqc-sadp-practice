@@ -1,6 +1,6 @@
 # check@collect目标架构
 
-依据完整题目，采用移动浏览器与桌面浏览器共用的B/S结构，服务器按界面接入、业务、数据访问分层。11/7已实现认证、采集、核验、讨论与异议处理及系统通知；地图和OCR留11/8。
+依据完整题目，采用移动浏览器与桌面浏览器共用的B/S结构，服务器按界面接入、业务、数据访问分层。11/8已接入地图、路线与OCR，复用认证、采集核验、讨论裁决及通知服务。
 
 ```mermaid
 flowchart TB
@@ -16,8 +16,13 @@ flowchart TB
   outbox --> mq[NATS JetStream · 本机已验证]
   mq --> delivery[角色群发 / 用户点发 / 本人收件箱]
   delivery --> web
-  poi --> geo[地图 / 路线 / 导航平台 · 待接入]
-  poi --> ocr[文字识别API · 待接入]
+  http --> maps[Maps权限与路线服务]
+  maps --> poi
+  maps --> geo[OSRM驾车路线]
+  web --> tiles[OpenStreetMap底图]
+  http --> ocr[Ocr版本与照片检查]
+  ocr --> poi
+  ocr --> api[OCR.Space文字识别]
 ```
 
 | 构件职责（表1） | 当前/目标实现 | 边界 |
@@ -26,7 +31,7 @@ flowchart TB
 | 认证与外部适配 | WeChat、Store已实现 | OAuth身份核验、账号关联、会话，不承担采集核验权限授权 |
 | POI与争议服务 | Collection、Review、Disputes | 版本、核验与重采、独立第三方指派和最终结论；按参与关系限制访问 |
 | 通信与中间件 | Chat、NATS消息适配、event_outbox与收件箱 | 两个角色群和问题私聊；SQLite保存业务数据，NATS承担实际通知传输 |
-| 外部地图与OCR | 待接入 | 隔离供应商API与数据格式，保留真实调用证据 |
+| 外部地图与OCR | Maps / OsrmRouter、Ocr / OcrSpace、map.js | 平台协议与业务检查分开；路线使用WGS84，OCR确认绑定照片版本并给分类建议 |
 
 | 质量权衡（表2） | 设计做法 | 边界与验证 |
 |---|---|---|
@@ -56,3 +61,7 @@ Review复用Collection的图片与位置校验，通过版本号和状态约束�
 ## 11月7日实现进度
 
 Chat按当前角色控制群聊，私聊参与者从原错误记录确定。Disputes排除双方账号后指派第三方，重采数据经Collection校验，终裁、快照与双方通知在同一事务保存。照片历史记录实际采集账号，重复请求不重复发消息或裁决。现场重采列入演示验收；结构调用见[讨论与异议时序](diagrams/collaboration.puml)。
+
+## 11月8日实现进度
+
+Maps生成受权限约束的GeoJSON，OsrmRouter校验外部路线；Ocr在调用前后检查版本、权限与照片摘要，OcrSpace单独处理外部协议。OCR缓存以POI版本、照片摘要及语言区分。浏览器负责地图显示和设备定位，应用密钥只留服务端。外部服务异常按错误返回，不写入伪造结果。见[地图与OCR时序](diagrams/map-ocr.puml)。

@@ -19,3 +19,5 @@
 11/6：以独立NATS JetStream承接消息中间件要求。业务、适配器和本人收件页面分开；发布/消费确认、事件ID去重对应可靠性权衡，单节点不代表高可用。新增UML时序notifications.puml；实际代理与HTTP通知验证见当日证据。
 
 11/7：Chat与Disputes分开讨论和裁决职责，复用采集校验、版本及通知构件；独立指派、参与关系和最终冻结对应安全性与可追溯性。新增UML时序collaboration.puml，本地链路与现场演示分开验收。
+
+11/8：地图显示留在表现层，Maps/Ocr处理访问与版本规则，OsrmRouter/OcrSpace隔离平台协议。对应B/S、N层和平台集成要求，新增map-ocr.puml。真实路线与中英文OCR有响应证据，手机现场与个人OCR配置列入验收待办。

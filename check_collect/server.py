@@ -15,16 +15,20 @@ from .review import Review
 from .notifications import Notifications
 from .chat import Chat
 from .disputes import Disputes, DECISIONS
-from . import review_pages, chat_pages, dispute_pages
+from .maps import Maps
+from .ocr import Ocr
+from . import review_pages, chat_pages, dispute_pages, map_page
 
 
-def application(settings: Settings, provider=None):
+def application(settings: Settings, provider=None,router=None,ocr_provider=None):
     store = Store(settings.database)
     collection = Collection(store)
     review = Review(collection)
     notifications = Notifications(store)
     chat = Chat(collection)
     disputes = Disputes(collection)
+    maps = Maps(collection,router)
+    ocr = Ocr(collection,ocr_provider)
     provider = provider or WeChat(settings)
     attempts = {}
     attempts_lock = threading.Lock()
@@ -54,9 +58,11 @@ def application(settings: Settings, provider=None):
             self.send_response(status)
             self.send_header('Content-Type', content_type)
             self.send_header('Cache-Control', 'no-store')
-            self.send_header('Referrer-Policy', 'no-referrer')
+            is_map=urlsplit(self.path).path=='/map'
+            self.send_header('Referrer-Policy', 'strict-origin-when-cross-origin' if is_map else 'same-origin')
             self.send_header('X-Content-Type-Options', 'nosniff')
-            self.send_header('Content-Security-Policy', "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self' data:; media-src 'self' blob:; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'")
+            tile_source=' https://tile.openstreetmap.org' if is_map else ''
+            self.send_header('Content-Security-Policy', "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self' data:"+tile_source+"; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'")
             self.send_header('Permissions-Policy', 'camera=(self), geolocation=(self), microphone=()')
             if location:
                 self.send_header('Location', location)
@@ -99,7 +105,7 @@ def application(settings: Settings, provider=None):
                     if any(collection.has_role(uid,r) for r in ('collector','reviewer')):
                         body += '<p><a href="/chats">工作讨论</a></p>'
                     if any(collection.has_role(uid,r) for r in ('collector','reviewer','third_party')):
-                        body += '<p><a href="/disputes">异议处理</a></p>'
+                        body += '<p><a href="/disputes">异议处理</a> · <a href="/map">POI地图</a></p>'
                 elif settings.configured:
                     body = '<p>POI数据采集与核验</p><p>使用微信身份登录，首次授权后建立本系统账号。</p><form action="/auth/wechat/login" method="post"><button>微信扫码登录</button></form>'
                 else:
@@ -107,6 +113,21 @@ def application(settings: Settings, provider=None):
                 if not uid:
                     body += '<hr><p>也可先建立本系统账号，随后绑定微信。</p><form action="/auth/local/login" method="post"><p><label>账号 <input name="username" required minlength="3" maxlength="40" autocomplete="username"></label></p><p><label>密码 <input type="password" name="password" required minlength="12" maxlength="128" autocomplete="current-password"></label></p><button>账号登录</button> <button formaction="/auth/local/register">注册账号</button></form>'
                 self.reply(200, self.page(body))
+            elif path in ('/map','/api/map'):
+                try:
+                    if not uid:self.reply_error(401,'请先登录');return
+                    maps._require(uid)
+                    if path=='/map':self.reply(200,self.page(map_page.page(ocr.provider.configured)))
+                    else:
+                        query=parse_qs(urlsplit(self.path).query,keep_blank_values=True)
+                        if not set(query)<= {'category','status'} or any(len(v)!=1 or not v[0] for v in query.values()):raise AuthError('地图筛选参数无效')
+                        value=maps.features(uid,query.get('category',[None])[0],query.get('status',[None])[0])
+                        self.reply(200,json.dumps(value,ensure_ascii=False),content_type='application/geo+json; charset=utf-8')
+                except AuthError as exc:self.reply_error(403,str(exc))
+            elif path in ('/static/map.js','/static/vendor/leaflet.js','/static/vendor/leaflet.css'):
+                files={'/static/map.js':('map.js','text/javascript'),'/static/vendor/leaflet.js':('vendor/leaflet.js','text/javascript'),'/static/vendor/leaflet.css':('vendor/leaflet.css','text/css')}
+                name,mime=files[path]
+                self.reply(200,(Path(__file__).parent/'static'/name).read_bytes(),content_type=mime+'; charset=utf-8')
             elif path=='/chats' or path.startswith('/chat/') or path in ('/disputes','/api/disputes') or path.startswith(('/dispute/','/api/disputes/')):
                 try:
                     if not uid:self.reply_error(401,'请先登录');return
@@ -214,13 +235,31 @@ def application(settings: Settings, provider=None):
             finalize_json=path.startswith('/api/disputes/') and path.endswith('/finalize') and len(path.split('/'))==5
             collaboration_form=path in ('/chats/open','/disputes/file') or (path.startswith('/chat/') and path.endswith('/send') and len(path.split('/'))==4)
             workflow=path in ('/review/report','/review/respond')
+            platform_json=path=='/api/maps/route' or (path.startswith('/api/pois/') and path.endswith('/ocr') and len(path.split('/'))==5)
             upload = path == '/api/pois' or response_json or finalize_json
-            if self.headers.get('Transfer-Encoding') or not 0 <= length <= (MAX_BODY if upload else 16384 if workflow or collaboration_form else 4096) or (not local and not upload and not workflow and not collaboration_form and length):
+            if self.headers.get('Transfer-Encoding') or not 0 <= length <= (MAX_BODY if upload else 16384 if workflow or collaboration_form else 4096) or (not local and not upload and not workflow and not collaboration_form and not platform_json and length):
                 self.close_connection = True
                 self.reply_error(400,'请求内容长度或格式无效')
                 return
             session = self.cookies().get('cc_session', '')
-            if collaboration_form or finalize_json:
+            if platform_json:
+                uid=store.user(session)
+                if not uid:self.reply_error(401,'请先登录');self.close_connection=True;return
+                try:
+                    if self.headers.get('Content-Type','').split(';')[0]!='application/json':raise AuthError('请求格式须为JSON')
+                    value=json.loads(self.rfile.read(length).decode('utf-8'))
+                    if not isinstance(value,dict):raise AuthError('参数无效')
+                    if path=='/api/maps/route':
+                        if set(value)!={'poi_id','latitude','longitude'}:raise AuthError('路线参数无效')
+                        result=maps.route(uid,value['poi_id'],value['latitude'],value['longitude'])
+                    else:
+                        if not set(value)<= {'language','confirmed_external','expected_revision'} or value.get('confirmed_external') is not True:raise AuthError('请先确认将选定照片发送至OCR.Space')
+                        revision=value.get('expected_revision')
+                        if type(revision) is not int or not 1<=revision<=2147483647:raise AuthError('请刷新地图并确认照片版本')
+                        result=ocr.recognize(uid,path.split('/')[3],value.get('language','auto'),expected_revision=revision)
+                    self.reply(200,json.dumps(result,ensure_ascii=False),content_type='application/json; charset=utf-8')
+                except (AuthError,ValueError) as exc:self.reply_error(400,str(exc) if isinstance(exc,AuthError) else '参数无效')
+            elif collaboration_form or finalize_json:
                 uid=store.user(session)
                 if not uid:self.reply_error(401,'请先登录');self.close_connection=True;return
                 try:

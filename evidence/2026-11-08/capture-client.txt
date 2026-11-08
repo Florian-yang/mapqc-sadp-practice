@@ -1,0 +1,1 @@
+8/8 client scenarios passed: capture, recollection, actionable failure, third-party payload and denied third-party location. Synthetic APIs only.
