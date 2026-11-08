@@ -1,0 +1,20 @@
+{
+  "date_beijing": "2026-11-08",
+  "verified_at": "2026-11-08T22:09:58.873705+08:00",
+  "implementation_commit": "37551eb47e7314d2fb585cfbd382b85160e9b765",
+  "remote_main_at_verification": "37551eb47e7314d2fb585cfbd382b85160e9b765",
+  "tag": "v0.9.0",
+  "tag_object": "74b62b6fd9a9e6696f398715d92af4d02b3de159",
+  "remote_tag_target": "37551eb47e7314d2fb585cfbd382b85160e9b765",
+  "push_verified": true,
+  "source_hashes_match_verification": true,
+  "scope": "154 Python tests, zero skipped; 12 real NATS scenarios; 8 capture and 11 map synthetic client scenarios; app HTTP to real OSRM and OCR.Space quick-test key with synthetic input.",
+  "pending": [
+    "personal OCR.Space key configuration",
+    "browser OCR result after confirmation",
+    "HTTPS phone GPS/camera and field navigation",
+    "third-party physical recapture",
+    "real WeChat and public deployment"
+  ],
+  "receipt": "Diary and receipt follow verified source/tag push; final main checked after receipt push."
+}
