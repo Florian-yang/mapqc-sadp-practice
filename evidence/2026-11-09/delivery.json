@@ -1,0 +1,31 @@
+{
+  "date_beijing": "2026-11-09",
+  "verified_at": "2026-11-09T22:07:59.930736+08:00",
+  "implementation_commit": "15591a839d667bd0e05df3a794b74d7a88a0ea3f",
+  "remote_main_at_verification": "15591a839d667bd0e05df3a794b74d7a88a0ea3f",
+  "tag": "v1.0.0-rc.1",
+  "tag_object": "18bb350985c2548759aca33921f45fc20d3ecf4d",
+  "remote_tag_target": "15591a839d667bd0e05df3a794b74d7a88a0ea3f",
+  "push_verified": true,
+  "source_hashes_match_verification": true,
+  "candidate_not_full_external_acceptance": true,
+  "package_sha256": "79b55073ec52f760e3ffc5ca2e1f6f074f14566fd2b2e75104fff9e3e7f4d354",
+  "package_path": "C:\\Users\\flori\\Desktop\\RuanJian\\作业\\综合实践\\MapQC-Practice\\dist\\综合实践.zip",
+  "identity": "杨健淳 2024302131017，个人完成100%，11/9本人确认",
+  "office_files": {
+    "reports/SADP周小结与课程总结-杨健淳-2024302131017.xlsx": "ce5d13433d05efe26cffdc51223160995048ffe21a92e6c40ae9260139b6175f",
+    "reports/SADP周小结与课程总结_实践记录.xlsx": "ce5d13433d05efe26cffdc51223160995048ffe21a92e6c40ae9260139b6175f",
+    "reports/综合实践报告.pdf": "87507581399b0d5190809732c8fb8437905478a84fc03e2a8abb0c697fa01cd6",
+    "reports/综合实践报告_2024302131017_杨健淳.docx": "5647811f21d11ff54c7f61fb8a7542df3b757e20e42f6a6b3320d139b964a3ca",
+    "reports/综合实践报告_工作稿.docx": "5647811f21d11ff54c7f61fb8a7542df3b757e20e42f6a6b3320d139b964a3ca"
+  },
+  "automation_id": "mapqc-11-9",
+  "automation_scope": "11/10—11/11只补既定遗漏、联调和交付；保持原21:30调度与通知偏好",
+  "pending": [
+    "personal OCR key",
+    "WeChat app and callback domain",
+    "public HTTPS/mobile capture, recollection and arrival navigation",
+    "physical third-party field verification"
+  ],
+  "receipt": "Source/tag push verified first; diary and receipt follow in a separate documentation commit."
+}
