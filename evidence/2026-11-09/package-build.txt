@@ -1,0 +1,1 @@
+{"file": "C:\\Users\\flori\\Desktop\\RuanJian\\作业\\综合实践\\MapQC-Practice\\dist\\综合实践.zip", "files": 74, "bytes": 1637753, "sha256": "79b55073ec52f760e3ffc5ca2e1f6f074f14566fd2b2e75104fff9e3e7f4d354"}

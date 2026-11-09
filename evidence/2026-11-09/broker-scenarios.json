@@ -1,0 +1,186 @@
+[
+  {
+    "scenario": "test_broker_outage_retry_and_file_store_restart",
+    "broker_pids": [
+      46652,
+      42380,
+      43348
+    ],
+    "outbox_events": 1,
+    "published_events": 1,
+    "delivered_events": 1,
+    "inbox_rows": 1,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 1,
+    "consumer_ack_floor": 1,
+    "consumer_ack_pending": 0
+  },
+  {
+    "scenario": "test_chat_and_final_arbitration_notifications_reach_parties",
+    "broker_pids": [
+      45708
+    ],
+    "outbox_events": 11,
+    "published_events": 11,
+    "delivered_events": 11,
+    "inbox_rows": 11,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 11,
+    "consumer_ack_floor": 11,
+    "consumer_ack_pending": 0
+  },
+  {
+    "scenario": "test_chat_role_revocation_does_not_leak_text_in_notification",
+    "broker_pids": [
+      24108
+    ],
+    "outbox_events": 1,
+    "published_events": 1,
+    "delivered_events": 1,
+    "inbox_rows": 1,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 1,
+    "consumer_ack_floor": 1,
+    "consumer_ack_pending": 0
+  },
+  {
+    "scenario": "test_consumer_restart_after_commit_before_ack_does_not_duplicate",
+    "broker_pids": [
+      36528
+    ],
+    "outbox_events": 1,
+    "published_events": 1,
+    "delivered_events": 1,
+    "inbox_rows": 1,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 1,
+    "consumer_ack_floor": 1,
+    "consumer_ack_pending": 0
+  },
+  {
+    "scenario": "test_full_stream_is_drained_before_retrying_new_publication",
+    "broker_pids": [
+      39284
+    ],
+    "outbox_events": 2,
+    "published_events": 2,
+    "delivered_events": 2,
+    "inbox_rows": 2,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 2,
+    "consumer_ack_floor": 2,
+    "consumer_ack_pending": 0
+  },
+  {
+    "scenario": "test_inbox_failure_is_retried_without_premature_ack",
+    "broker_pids": [
+      16760
+    ],
+    "outbox_events": 1,
+    "published_events": 1,
+    "delivered_events": 1,
+    "inbox_rows": 1,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 1,
+    "consumer_ack_floor": 1,
+    "consumer_ack_pending": 0
+  },
+  {
+    "scenario": "test_incompatible_existing_stream_and_consumer_are_refused",
+    "broker_pids": [
+      31492
+    ],
+    "outbox_events": 0,
+    "published_events": 0,
+    "delivered_events": 0,
+    "inbox_rows": 0,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 0,
+    "consumer_ack_floor": 0,
+    "consumer_ack_pending": 0
+  },
+  {
+    "scenario": "test_old_outbox_migration_and_role_snapshot",
+    "broker_pids": [
+      44496
+    ],
+    "outbox_events": 3,
+    "published_events": 3,
+    "delivered_events": 3,
+    "inbox_rows": 3,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 3,
+    "consumer_ack_floor": 3,
+    "consumer_ack_pending": 0
+  },
+  {
+    "scenario": "test_publish_ack_loss_retries_are_deduplicated",
+    "broker_pids": [
+      33788
+    ],
+    "outbox_events": 1,
+    "published_events": 1,
+    "delivered_events": 1,
+    "inbox_rows": 1,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 1,
+    "consumer_ack_floor": 1,
+    "consumer_ack_pending": 0
+  },
+  {
+    "scenario": "test_resubmission_notifies_all_reviewers_once",
+    "broker_pids": [
+      41860
+    ],
+    "outbox_events": 5,
+    "published_events": 5,
+    "delivered_events": 5,
+    "inbox_rows": 5,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 5,
+    "consumer_ack_floor": 5,
+    "consumer_ack_pending": 0
+  },
+  {
+    "scenario": "test_role_broadcast_point_delivery_and_http_ownership",
+    "broker_pids": [
+      44824
+    ],
+    "outbox_events": 7,
+    "published_events": 7,
+    "delivered_events": 7,
+    "inbox_rows": 7,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 7,
+    "consumer_ack_floor": 7,
+    "consumer_ack_pending": 0
+  },
+  {
+    "scenario": "test_tampered_payload_is_rejected_without_delivery",
+    "broker_pids": [
+      46636
+    ],
+    "outbox_events": 1,
+    "published_events": 1,
+    "delivered_events": 1,
+    "inbox_rows": 1,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 2,
+    "consumer_ack_floor": 2,
+    "consumer_ack_pending": 0
+  },
+  {
+    "scenario": "test_http_to_broker_full_dispute_map_and_ocr_flow",
+    "broker_pids": [
+      36944
+    ],
+    "outbox_events": 12,
+    "published_events": 12,
+    "delivered_events": 12,
+    "inbox_rows": 12,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 12,
+    "consumer_ack_floor": 12,
+    "consumer_ack_pending": 0
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "updated_at": "2026-11-09T21:52:20.990665+08:00",
+  "identity": {
+    "name": "杨健淳",
+    "student_id": "2024302131017",
+    "provided_by": "user confirmed through root"
+  },
+  "sheet_name_before": "<学生学号姓名>每周工作小结",
+  "sheet_name_after": "2024302131017杨健淳每周工作小结",
+  "other_student_slots": [],
+  "changed_cells": [],
+  "C4_C5_C9_and_entire_sheet_xml_byte_identical": true,
+  "all_other_original_parts_byte_identical": true,
+  "before_sha256": "8e2d4ddb0f9a5ad4db24c31680276f37b3abfe3f77c1e5a323e68ed32f2703d2",
+  "after_sha256": "ce5d13433d05efe26cffdc51223160995048ffe21a92e6c40ae9260139b6175f",
+  "outputs": [
+    "C:\\Users\\flori\\Desktop\\RuanJian\\作业\\综合实践\\MapQC-Practice\\reports\\SADP周小结与课程总结_实践记录.xlsx",
+    "C:\\Users\\flori\\Desktop\\RuanJian\\作业\\综合实践\\MapQC-Practice\\reports\\SADP周小结与课程总结-杨健淳-2024302131017.xlsx"
+  ],
+  "method": "Narrow OOXML sheet-name substitution; artifact-tool public quickstart/help did not expose worksheet rename. Final workbook reimported and rendered with artifact-tool.",
+  "artifact_help": [
+    "worksheet.name: no matches",
+    "rename worksheet: no documented rename setter/method in returned public entries"
+  ],
+  "source_backup": "C:\\Users\\flori\\Desktop\\RuanJian\\作业\\综合实践\\MapQC-Practice\\evidence\\local\\day9-excel\\before-identity.xlsx",
+  "artifact_reimport_verified": true,
+  "rendered_pixels_identical_to_reviewed_previous": true,
+  "final_preview": "identity-final.png",
+  "preview_sha256": "4854efeda4950936c7b49a9d31792396f206c1ead91f79036b1b738abf264c44"
+}

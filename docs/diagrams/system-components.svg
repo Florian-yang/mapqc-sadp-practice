@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1430" viewBox="0 0 1120 1430">
+<defs><marker id="dep" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M1,1 L11,5 L1,9" fill="none" stroke="#243d34" stroke-width="1.5"/></marker></defs>
+<rect width="1120" height="1430" fill="white"/>
+<style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#172c24}.dep{fill:none;stroke:#243d34;stroke-width:2;stroke-dasharray:8 6;marker-end:url(#dep)}</style>
+<text x="560" y="47" text-anchor="middle" font-size="34" font-weight="bold">check@collect 构件与部署</text>
+<path d="M20,212 L32,200 H267 V560 L255,572 H20 Z M20,212 H255 L267,200 M255,212 V572" fill="#f8faf8" stroke="#52745f" stroke-width="2"/>
+<text x="137.5" y="247" text-anchor="middle" font-size="22" font-weight="normal">«device»</text>
+<text x="137.5" y="286" text-anchor="middle" font-size="27" font-weight="bold">用户终端</text>
+<text x="137.5" y="323" text-anchor="middle" font-size="23" font-weight="normal">移动设备 / 桌面</text>
+<text x="137" y="375" text-anchor="middle" font-size="27" font-weight="bold">① 界面</text>
+<rect x="40" y="395" width="195" height="130" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="196" y="407" width="24" height="31" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="190" y="412" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="190" y="426" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<text x="137.5" y="465" text-anchor="middle" font-size="24" font-weight="normal">浏览器界面</text>
+<text x="137.5" y="500" text-anchor="middle" font-size="24" font-weight="normal">采集 / 地图 / 讨论</text>
+<path d="M285,107 L297,95 H857 V1355 L845,1367 H285 Z M285,107 H845 L857,95 M845,107 V1367" fill="#f8faf8" stroke="#52745f" stroke-width="2"/>
+<text x="565.0" y="142" text-anchor="middle" font-size="22" font-weight="normal">«device»</text>
+<text x="565.0" y="181" text-anchor="middle" font-size="27" font-weight="bold">应用主机（当前本机）</text>
+<path d="M305,235 L315,225 H835 V850 L825,860 H305 Z M305,235 H825 L835,225 M825,235 V860" fill="#fff" stroke="#52745f" stroke-width="2"/>
+<text x="565" y="260" text-anchor="middle" font-size="22" font-weight="normal">«executionEnvironment»</text>
+<text x="565" y="296" text-anchor="middle" font-size="27" font-weight="normal">Python Web</text>
+<text x="335" y="340" text-anchor="start" font-size="27" font-weight="bold">② 界面控制</text>
+<rect x="335" y="360" width="475" height="85" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="771" y="372" width="24" height="31" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="765" y="377" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="765" y="391" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<text x="572.5" y="420" text-anchor="middle" font-size="27" font-weight="normal">HTTP控制器</text>
+<text x="335" y="495" text-anchor="start" font-size="27" font-weight="bold">③ 业务</text>
+<rect x="335" y="515" width="475" height="120" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="771" y="527" width="24" height="31" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="765" y="532" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="765" y="546" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<text x="572.5" y="575" text-anchor="middle" font-size="27" font-weight="normal">采集 · 核验 · 异议 · 讨论</text>
+<text x="572.5" y="610" text-anchor="middle" font-size="27" font-weight="normal">认证 · 地图 · OCR</text>
+<text x="335" y="690" text-anchor="start" font-size="27" font-weight="bold">④ 数据访问</text>
+<rect x="335" y="710" width="475" height="115" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="771" y="722" width="24" height="31" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="765" y="727" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="765" y="741" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<text x="572.5" y="768" text-anchor="middle" font-size="27" font-weight="normal">Store / 服务内SQL</text>
+<text x="572.5" y="803" text-anchor="middle" font-size="27" font-weight="normal">照片读写</text>
+<rect x="335" y="930" width="210" height="110" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="506" y="942" width="24" height="31" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="500" y="947" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="500" y="961" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<text x="440.0" y="1000" text-anchor="middle" font-size="27" font-weight="normal">消息进程</text>
+<path d="M580,907 L592,895 H822 V1065 L810,1077 H580 Z M580,907 H810 L822,895 M810,907 V1077" fill="#f8faf8" stroke="#52745f" stroke-width="2"/>
+<text x="695.0" y="942" text-anchor="middle" font-size="19" font-weight="normal">«executionEnvironment»</text>
+<text x="695.0" y="981" text-anchor="middle" font-size="25" font-weight="bold">NATS JetStream</text>
+<text x="695.0" y="1018" text-anchor="middle" font-size="23" font-weight="normal">持久流 / 消费确认</text>
+<text x="335" y="1145" text-anchor="start" font-size="27" font-weight="bold">⑤ 存储管理</text>
+<path d="M335,1195 H527 L545,1213 V1295 H335 Z M527,1195 V1213 H545" fill="white" stroke="#52745f" stroke-width="2"/>
+<text x="440.0" y="1227" text-anchor="middle" font-size="22" font-weight="normal">«artifact»</text>
+<text x="440.0" y="1269" text-anchor="middle" font-size="26" font-weight="normal">SQLite数据库</text>
+<path d="M590,1195 H782 L800,1213 V1295 H590 Z M782,1195 V1213 H800" fill="white" stroke="#52745f" stroke-width="2"/>
+<text x="695.0" y="1227" text-anchor="middle" font-size="22" font-weight="normal">«artifact»</text>
+<text x="695.0" y="1269" text-anchor="middle" font-size="26" font-weight="normal">照片文件</text>
+<path d="M880,350 V325 H995 V350 H1100 V945 H880 Z M880,350 H995" fill="#f8faf8" stroke="#52745f" stroke-width="2"/>
+<text x="990.0" y="381" text-anchor="middle" font-size="22" font-weight="normal">«package»</text>
+<text x="990.0" y="411" text-anchor="middle" font-size="27" font-weight="bold">外部平台</text>
+<rect x="900" y="460" width="180" height="100" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="1041" y="472" width="24" height="31" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="1035" y="477" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="1035" y="491" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<text x="990.0" y="530" text-anchor="middle" font-size="25" font-weight="normal">微信开放平台</text>
+<rect x="900" y="605" width="180" height="100" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="1041" y="617" width="24" height="31" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="1035" y="622" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="1035" y="636" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<text x="990.0" y="675" text-anchor="middle" font-size="25" font-weight="normal">OSRM路线</text>
+<rect x="900" y="750" width="180" height="100" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="1041" y="762" width="24" height="31" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="1035" y="767" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<rect x="1035" y="781" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
+<text x="990.0" y="820" text-anchor="middle" font-size="25" font-weight="normal">OCR.Space</text>
+<path d="M20,752 L32,740 H267 V930 L255,942 H20 Z M20,752 H255 L267,740 M255,752 V942" fill="#f8faf8" stroke="#52745f" stroke-width="2"/>
+<text x="137.5" y="787" text-anchor="middle" font-size="22" font-weight="normal">«node»</text>
+<text x="137.5" y="826" text-anchor="middle" font-size="25" font-weight="bold">OpenStreetMap</text>
+<text x="137" y="890" text-anchor="middle" font-size="26" font-weight="normal">底图瓦片</text>
+<path class="dep" d="M235,445 H270 V403 H335"/>
+<text x="285" y="370" text-anchor="middle" font-size="22" font-weight="normal">HTTP/JSON</text>
+<path class="dep" d="M565,445 V515"/>
+<path class="dep" d="M565,635 V710"/>
+<path class="dep" d="M335,800 H320 V1175 H440 V1195"/>
+<path class="dep" d="M320,1175 H695 V1195"/>
+<path class="dep" d="M137,525 V740"/>
+<text x="137" y="660" text-anchor="middle" font-size="22" font-weight="normal">HTTPS</text>
+<path class="dep" d="M810,550 H860 V510 H900"/>
+<text x="860" y="445" text-anchor="middle" font-size="22" font-weight="normal">HTTPS</text>
+<path class="dep" d="M810,575 H870 V655 H900"/>
+<path class="dep" d="M810,600 H855 V800 H900"/>
+<path class="dep" d="M440,930 V875 H420 V825"/>
+<path class="dep" d="M545,990 H580"/>
+<text x="565" y="1095" text-anchor="middle" font-size="22" font-weight="normal">TCP</text>
+</svg>

@@ -1,0 +1,21 @@
+{
+  "date_beijing": "2026-11-09",
+  "purpose": "Recover 11/8 browser OCR result check",
+  "data": "Copy of synthetic 11/8 fixture including its real OCR response cache",
+  "observed": [
+    "login succeeded",
+    "photo displayed",
+    "checkbox initially unchecked, OCR button disabled",
+    "checking consent enabled button",
+    "click displayed MAPQC SHOP 42 and 兴旺商店",
+    "shop suggestion displayed; source category other"
+  ],
+  "outbound_ocr_calls": 0,
+  "not_exercised": [
+    "physical camera",
+    "physical GPS",
+    "arrival navigation",
+    "personal API key"
+  ],
+  "fixture_issue": "First copy omitted sibling photos; photos copied and reload passed"
+}

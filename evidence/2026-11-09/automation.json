@@ -1,0 +1,8 @@
+{
+  "automation_id": "mapqc-11-9",
+  "status": "ACTIVE",
+  "notification_policy_preserved": true,
+  "original_schedule_preserved": true,
+  "scope": "11/10-11 only original assignment gaps and external acceptance; individual author confirmed",
+  "prompt_sha256": "dc11061a4ac733e8efcda4923859df0fef24e85535d70e8e88366b89c890111c"
+}

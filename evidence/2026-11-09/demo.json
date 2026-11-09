@@ -1,0 +1,27 @@
+{
+  "accounts": 3,
+  "role_counts": {
+    "collector": 1,
+    "reviewer": 1,
+    "third_party": 1
+  },
+  "password_login_verified": true,
+  "poi_count": 1,
+  "category": "other",
+  "synthetic_position": [
+    30.546,
+    114.37
+  ],
+  "photo_count": 1,
+  "outbox_ready_for_review": 1,
+  "repeat_exit": 1,
+  "repeat_message": "目标数据库已存在，未覆盖",
+  "original_files_unchanged": true,
+  "outside_parent_rejected": true,
+  "file_sha256": {
+    "test.sqlite3": "6021b76106e5a013ad78f46146404fd1f46fd83bb5f1be04cf807efb45de1837",
+    "photos/722e63dabb33949f31cd24af77b7b6fe.jpg": "f688fcb352b78a17af3df00c17d35023669427ec12ebfbaa520cac936ce86b49"
+  },
+  "external_calls": 0,
+  "processes_started": 0
+}

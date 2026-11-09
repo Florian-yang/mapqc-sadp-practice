@@ -1,0 +1,113 @@
+{
+  "verified_at": "2026-11-09T22:00:22.482307+08:00",
+  "trigger_beijing": "2026-11-09T21:33:13.654+08:00",
+  "version": "1.0.0-rc.1",
+  "repository_python_tests": 155,
+  "historical_loader_regressions": 9,
+  "current_poi_tests": 146,
+  "skipped": 0,
+  "real_broker_scenarios": 13,
+  "synthetic_frontend_scenarios": 20,
+  "archive_extracted_and_retested": true,
+  "cpp_orders_checked": 3,
+  "checks": [
+    {
+      "name": "python-tests",
+      "exit_code": 0,
+      "resumed_from_completed_step": true
+    },
+    {
+      "name": "capture-client",
+      "exit_code": 0,
+      "resumed_from_completed_step": true
+    },
+    {
+      "name": "map-client",
+      "exit_code": 0,
+      "resumed_from_completed_step": true
+    },
+    {
+      "name": "noodle-build",
+      "exit_code": 0
+    },
+    {
+      "name": "package-build",
+      "exit_code": 0
+    },
+    {
+      "name": "package-python-tests",
+      "exit_code": 0
+    },
+    {
+      "name": "package-capture-client",
+      "exit_code": 0
+    },
+    {
+      "name": "package-map-client",
+      "exit_code": 0
+    },
+    {
+      "name": "diff-check",
+      "exit_code": 0
+    }
+  ],
+  "scope": "Real loopback HTTP and local NATS whole workflow; injected map/OCR protocols in the integrated scenario. Real provider receipts dated 11/8. Browser 11/9 read existing real-response cache; outbound calls zero.",
+  "pending": [
+    "personal OCR key",
+    "WeChat app and callback domain",
+    "public HTTPS/mobile capture, recollection and arrival navigation",
+    "physical third-party field verification"
+  ],
+  "source_sha256": {
+    "check_collect/__init__.py": "113f45114fae9a599e4b8067d2f324a9cd335810ebffc3324a9678c438820454",
+    "check_collect/auth.py": "8ed9fb05a46f69abf983a371ec2c12d48f31790bd315b3cc610fadddfaf2acd1",
+    "check_collect/chat.py": "6d77fb2a5c6440cdb12f6fd266c7645b555e4bb33f5cbc2bef5b34ef96b655bd",
+    "check_collect/chat_pages.py": "264fffa70055f34e1a76e04dff3f8fe4951247906e4bbad15822580d8b3343e4",
+    "check_collect/collection.py": "c185f40e47532c224ed1bff982ca183187e044e7e62f08c9882464cf29b444a5",
+    "check_collect/dispute_pages.py": "ccf5521311d11f34f83d2c1e6145d58d6970c003372b63f0981f7b3a2a35aa7a",
+    "check_collect/disputes.py": "d4db2d35791630a873eba7711b1baa6aeeec3e64704455ba979bba45546d17c8",
+    "check_collect/events.py": "a718338964de268f0d28803342c7bd77773298b0e5ae933b75a267318e8baed2",
+    "check_collect/map_page.py": "f3d96aee145609ad3ef2d4b072dd1bfab5db5cb14645bf85d18ef617fabf469a",
+    "check_collect/maps.py": "7fb9ac10068dc6af4cecce10c669d28ed13a16165189d33c648d19f1db12c405",
+    "check_collect/messaging.py": "378d692afa24a90ae98ef4736e1616a451c1d6563fe140960b12606e2274edb7",
+    "check_collect/notifications.py": "fa17b0a911828f58442ac1adaa237ebbf733faae4d25dde4e4b3d3374288361d",
+    "check_collect/ocr.py": "d106033a8a208ffd6f0fe6dbdb3e390ce1e903db2a973458ea304be4bc794d93",
+    "check_collect/review.py": "fb1a945eb000432aef0c4211c7492f40f1dd593c8a047dddd31376e61d94a3ac",
+    "check_collect/review_pages.py": "eec8b356e38ff25a2187546889d60393ee3f06c0568f3e279d0dacf2d1607f4e",
+    "check_collect/roles.py": "7509e39d6c8f3e28c472b9ac5a951622633a13cb1cb19eca566da922b547a1b4",
+    "check_collect/server.py": "f4c3e7dc669f196be8c28d05e2e5970ccb593a2876eb22eb8c1ea008f9800d3b",
+    "check_collect/static/capture.js": "ba2429f60242a7907c150122ec7689dda81268473e672de34ee8c9e434eeccdf",
+    "check_collect/static/map.js": "8330a5044abd20d4e12240c77057d7c8eaca519d1cf7551aff0ccd06aaa2172e",
+    "check_collect/static/vendor/leaflet.js": "db49d009c841f5ca34a888c96511ae936fd9f5533e90d8b2c4d57596f4e5641a",
+    "extras/noodle/noodle_shop.cpp": "9d75afa466e3a3ab0af6cba6fb7b22e065d4372b7a308288f629607b87ecb973",
+    "scripts/create_demo.py": "a4dc4f8e20daa834224af7c7cc1bf244cbe615e2474e9462679ed4b3ec75b95b",
+    "scripts/get_nats.py": "166b4b537edc33cd48c51ecca2a0f47974bb0cb8388fe711c64037f00151b691",
+    "scripts/package_submission.py": "592ef92b8185a117e4e6181c17ce804ea29c6ba2e86fa1d2b8fd6d68d1aa1f96",
+    "tests/capture_client_test.cjs": "1f4bbdcfe56a563d9e4bf01f84ca4f24267bfead8b3f4b5452a699f9ae385049",
+    "tests/map_client_test.cjs": "0160b8b281451e8e7c4da582ba445e323b2d888a962cf1d90446620eb800106f",
+    "tests/test_chat.py": "3ad933e987b4ce11d6e6fd9d3bf96a69f6819cf9391b74590351ae177ee7b18b",
+    "tests/test_collaboration_http.py": "725eebb322c521298886396e14bcd814d1d3919c7afc9f14fa1574eea203d0ff",
+    "tests/test_collection.py": "c3e67ec3763a6a7b399386ece526b34bf4a21480c5072d95ffebad1bdae35ea7",
+    "tests/test_disputes.py": "b8e3587dacc2ff52cc1493a1f346f6d8dea3f25844efad82c30790525c1ed850",
+    "tests/test_geoplatform_http.py": "50d7e60f0090869f03c6c48a2af97a64c1b1bc2f706a0ec64197f2343e9cf58d",
+    "tests/test_loaders.py": "0a1bcfe4579ae86db8bbe472bddc107731b461608073d51dba730b9c633b79d8",
+    "tests/test_local_http.py": "2c549895f146c5975d70f6cbf9ddbccf1a1be72a896690181c94388c6856c8a2",
+    "tests/test_maps.py": "f77095fe5d510062760b21aa7eff11bd2d92d58013ed6fd834fa474821a8346c",
+    "tests/test_messaging_integration.py": "57b4c0f3c8d2e06ec6fda2a8ffae334191387b3f1bde6e68002fa210553c94e7",
+    "tests/test_nats_setup.py": "f975de65d09c98c5cc3058a952b893b8c4befbf03dc13b966125d4da6f02bc1a",
+    "tests/test_notification_schema.py": "3d3ab028adc940e26823457f105b010d17c9d4779ae2f6c36d80667c978b8b08",
+    "tests/test_ocr.py": "f146fac84af7ab203633345e1f6327cbaa9ead8fbeda63ddbf246eb46d95d863",
+    "tests/test_ocr_http.py": "3a6f2eb5848a7e3b7657602aacdf6ddfb8cfced15feb4f88c2b42ee9965bac01",
+    "tests/test_review.py": "c572f36582bccf1b74581589df964939cc022cfda5da6babb782251c2eb7f6ab",
+    "tests/test_system_flow.py": "b3548c669c15cea4cc2149ad0a3bf803f4bfaa930e7a53302b729a81494b3c23",
+    "tests/test_wechat.py": "cdb30860a8b4472e8b0244074cb1513ed470c67634fcc44b2054b0a96ebb6a00"
+  },
+  "report_artifact_sha256": {
+    "reports/SADP周小结与课程总结-杨健淳-2024302131017.xlsx": "ce5d13433d05efe26cffdc51223160995048ffe21a92e6c40ae9260139b6175f",
+    "reports/SADP周小结与课程总结_实践记录.xlsx": "ce5d13433d05efe26cffdc51223160995048ffe21a92e6c40ae9260139b6175f",
+    "reports/综合实践报告.pdf": "87507581399b0d5190809732c8fb8437905478a84fc03e2a8abb0c697fa01cd6",
+    "reports/综合实践报告_2024302131017_杨健淳.docx": "5647811f21d11ff54c7f61fb8a7542df3b757e20e42f6a6b3320d139b964a3ca",
+    "reports/综合实践报告_工作稿.docx": "5647811f21d11ff54c7f61fb8a7542df3b757e20e42f6a6b3320d139b964a3ca"
+  },
+  "post_test_normalization": "Only test file trailing blank removed; AST unchanged and affected flow rerun in final archive, see eof-normalization.json."
+}

@@ -1,7 +1,7 @@
 {
   "title": "check@collect综合实践计划（11/3依据完整题目修订）",
   "authoritative_requirements": "docs/assignment-original.md",
-  "updated": "2026-11-08",
+  "updated": "2026-11-09",
   "summary": "移动Web/Internet POI采集核验系统，B/S与N层；现有MapQC为历史准备材料，不代表新题目功能已实现。",
   "deadline_beijing": "2026-11-11T22:30:00+08:00",
   "normal_development_until": "2026-11-09",
@@ -27,7 +27,7 @@
       "version": "v0.6",
       "task": "核验错误标识、说明保存；采集者重采、更新、驳回状态流转",
       "result": "按采集者/核验者权限验证，核验后通知事件入待发送箱，保留版本与状态证据",
-      "status": "local_verified; physical_recollection_pending; outbox_not_delivered",
+      "status": "local_verified; real_nats_delivery_verified_11_6; physical_recollection_pending",
       "evidence": "evidence/2026-11-05"
     },
     {
@@ -50,15 +50,18 @@
       "date": "11/8",
       "version": "v0.9",
       "task": "地图按类别显示分布/错误/进展，路径与导航；OCR API辅助分类",
-      "result": "地图、权限、版本及失败分支本地验证；真实OSRM路线和OCR中英文响应留证。个人Key、手机现场导航与浏览器OCR结果展示待验收。",
-      "status": "local_verified; real_osrm_verified; real_ocr_public_test_key_verified; personal_key_and_physical_navigation_pending; browser_ocr_result_pending",
-      "evidence": "evidence/2026-11-08"
+      "result": "地图、权限及失败分支本地验证；11/8真实OSRM和OCR响应留证，11/9补齐浏览器缓存结果展示；个人Key与手机现场导航待验收。",
+      "status": "local_verified; real_osrm_verified; real_ocr_public_test_key_verified; browser_ocr_cache_display_verified_11_9; personal_key_and_physical_navigation_pending",
+      "evidence": "evidence/2026-11-08",
+      "follow_up": "11/9补齐浏览器结果展示，读取前日缓存，外发0次；原确认框中断留在11/8日记。"
     },
     {
       "date": "11/9",
-      "version": "v1.0候选",
+      "version": "v1.0.0-rc.1",
       "task": "联调、UML一图二表、源码演示、部署说明、第9周与Excel汇总",
-      "result": "逐条核对验收矩阵和真实外部集成；未通过项不能称最终完成"
+      "result": "真实HTTP与NATS综合联调、UML一图二表、教师报告、第9周Excel及候选源码演示包；手机现场、微信与个人OCR配置待验收。",
+      "status": "local_integration_verified; uml_report_excel_prepared; external_acceptance_pending",
+      "evidence": "evidence/2026-11-09"
     },
     {
       "date": "11/10",

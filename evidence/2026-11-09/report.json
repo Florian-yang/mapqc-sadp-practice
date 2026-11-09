@@ -1,0 +1,26 @@
+{
+  "template_sha256": "76f6339ddf85e95c55fbd87ad35451e9936619fd8a1bc57d35aea9ac369183be",
+  "report_sha256": "5647811f21d11ff54c7f61fb8a7542df3b757e20e42f6a6b3320d139b964a3ca",
+  "cover_layout_preserved": true,
+  "cover_identity_slots": "User confirmed individual author Yang Jianchun, 2024302131017 on 11/9; member field marked individual completion",
+  "teacher_assessment_preserved": true,
+  "section_geometry_preserved": true,
+  "opaque_parts_preserved": true,
+  "editable_package_parts": [
+    "[Content_Types].xml",
+    "word/_rels/document.xml.rels",
+    "word/document.xml",
+    "word/styles.xml"
+  ],
+  "quality_order": [
+    "功能适用性",
+    "可靠性",
+    "性能效率",
+    "操控性",
+    "安全性",
+    "兼容性",
+    "可维护性",
+    "移植性"
+  ],
+  "renderer": "Native Word read-only PDF export + bundled Poppler; LibreOffice not installed on Windows"
+}

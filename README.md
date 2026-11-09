@@ -1,18 +1,13 @@
-# check@collect · POI采集与核验
+# check@collect POI采集与核验
 
-《软件体系结构与设计模式》综合实践。11月3日收到完整题干后，从离线地图质检准备调整为移动Web/Internet POI采集核验系统。沿用当前私有仓库以保留历史，不改写已有提交。
+《软件体系结构与设计模式》综合实践，杨健淳，2024302131017，个人完成。当前为1.0.0-rc.1候选版，软件及外部平台验收见[需求表](docs/requirements.md)。旧MapQC桌面代码作为Git历史准备保留，不随本题源码包交付。
 
-- [完整原始题干](docs/assignment-original.md)
-- [逐项验收](docs/requirements.md)、[修订日程](docs/plan.md)、[架构与一图二表](docs/architecture.md)
-- [微信申请及配置](docs/wechat-setup.md)
+- [题干](docs/assignment-original.md)、[日程](docs/plan.md)、[UML一图二表](docs/architecture.md)
+- [本机演示](docs/demo.md)、[部署](docs/deployment.md)、[消息](docs/messaging-acceptance.md)
+- [微信](docs/wechat-setup.md)、[地图与OCR](docs/map-ocr-acceptance.md)、[讨论及异议](docs/collaboration-acceptance.md)
 
-当前v0.9接入地图、OSRM驾车路线与OCR.Space照片识别，见[地图与OCR说明](docs/map-ocr-acceptance.md)。私聊、群聊及第三方流程见[讨论与异议说明](docs/collaboration-acceptance.md)，NATS运行见[消息说明](docs/messaging-acceptance.md)。个人OCR Key尚未配置；微信、HTTPS手机与现场演示待验收。
+在项目目录安装`requirements-web.txt`后运行`python -m check_collect.server`，本地入口http://127.0.0.1:8765。消息投递还需启动NATS和消息进程，三者共用同一个数据库，具体命令见演示文档。`.env.example`只列变量，程序不自动加载该文件。
 
-```powershell
-& 'C:/Users/flori/AppData/Local/Programs/Python/Python313/python.exe' -m check_collect.server
-& 'C:/Users/flori/AppData/Local/Programs/Python/Python313/python.exe' -m unittest discover -s tests -v
-```
+验证命令：`python -m unittest discover -s tests -v`；真实代理场景先设置`NATS_SERVER_EXE`为本机NATS程序路径，跳过项不计通过。前端检查为`node tests/capture_client_test.cjs`和`node tests/map_client_test.cjs`。源码包只包含当前POI测试，仓库另保留9项旧加载器回归。
 
-打开http://127.0.0.1:8765。未配置微信时页面会显示待配置。Web服务需安装requirements-web.txt（Pillow用于图片解码校验）；requirements.txt中的Qt依赖仅供旧桌面准备代码使用。公网HTTPS与平台审核需另行配置核验。
-
-旧`mapqc_practice`、旧运行包与v0.1—v0.3标签保留为真实历史准备材料，不能计作check@collect功能完成。旧文档快照在`docs/history/mapqc-before-20261103`。
+面馆装饰模式C++与类图在`extras/noodle`。报告和第9周Excel在`reports`。个人OCR Key、微信应用及域名尚未配置；手机现场和公网演示待验收。

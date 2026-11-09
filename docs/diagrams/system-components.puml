@@ -1,0 +1,47 @@
+@startuml
+skinparam componentStyle uml2
+skinparam shadowing false
+skinparam defaultFontName Microsoft YaHei
+left to right direction
+node "用户终端" <<device>> {
+  package "① 界面" {
+    component "浏览器界面\n采集 / 地图 / 讨论" as UI
+  }
+}
+node "应用主机（当前本机）" <<device>> {
+  node "Python Web" <<executionEnvironment>> {
+    package "② 界面控制" {
+      component "HTTP控制器" as HTTP
+    }
+    package "③ 业务" {
+      component "采集 / 核验 / 异议 / 讨论\n认证 / 地图 / OCR" as Business
+    }
+    package "④ 数据访问" {
+      component "Store / 服务内SQL / 照片读写" as Access
+    }
+  }
+  component "消息进程" as Msg
+  node "NATS JetStream" <<executionEnvironment>> as MQ
+  package "⑤ 存储管理" {
+    artifact "SQLite数据库" as DB
+    artifact "照片文件" as Photo
+  }
+}
+package "外部平台" {
+  component "微信开放平台" as WX
+  component "OSRM路线" as OSRM
+  component "OCR.Space" as OCR
+}
+node "OpenStreetMap" as OSM
+UI ..> HTTP : HTTP / JSON
+UI ..> OSM : HTTPS瓦片
+HTTP ..> Business
+Business ..> Access
+Business ..> WX : HTTPS
+Business ..> OSRM : HTTPS
+Business ..> OCR : HTTPS
+Access ..> DB
+Access ..> Photo
+Msg ..> Access
+Msg ..> MQ : TCP / JetStream
+@enduml

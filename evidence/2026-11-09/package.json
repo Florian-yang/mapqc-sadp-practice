@@ -1,0 +1,13 @@
+{
+  "file": "C:\\Users\\flori\\Desktop\\RuanJian\\作业\\综合实践\\MapQC-Practice\\dist\\综合实践.zip",
+  "files": 74,
+  "bytes": 1637753,
+  "sha256": "79b55073ec52f760e3ffc5ca2e1f6f074f14566fd2b2e75104fff9e3e7f4d354",
+  "archive_manifest_verified": true,
+  "source_files_match_archive": true,
+  "package_python_tests": 146,
+  "package_broker_scenarios": 13,
+  "package_frontend_scenarios": 20,
+  "no_secrets_or_runtime_data_in_whitelist": true,
+  "post_test_eof_normalization": "See eof-normalization.json: identical Python AST, all other files unchanged; affected real-HTTP/NATS flow retested in final archive."
+}

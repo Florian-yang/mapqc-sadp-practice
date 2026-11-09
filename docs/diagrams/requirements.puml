@@ -1,0 +1,22 @@
+@startuml
+left to right direction
+actor 采集者
+actor 核验者
+actor 第三方
+rectangle "check@collect" {
+  usecase "照片与位置采集" as C
+  usecase "核验与错误登记" as R
+  usecase "重采 更新或驳回" as U
+  usecase "私聊与角色群" as M
+  usecase "地图导航与识别" as G
+  usecase "异议与第三方裁决" as D
+}
+采集者 -- C
+采集者 -- U
+采集者 -- M
+采集者 -- G
+核验者 -- R
+核验者 -- M
+核验者 -- G
+第三方 -- D
+@enduml

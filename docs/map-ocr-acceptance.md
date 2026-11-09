@@ -23,3 +23,7 @@
 坐标、照片和账号均为合成数据。个人OCR Key尚未配置；HTTPS手机相机/GPS与到达导航、第三方现场采集、微信和公网演示列入后续验收。
 
 依据：[OSRM接口](https://project-osrm.org/docs/v5.24.0/api/)、[OSM瓦片政策](https://operations.osmfoundation.org/policies/tiles/)、[OCR.Space接口](https://ocr.space/ocrapi)和[测试Key说明](https://ocr.space/faq)。
+
+## 11月9日补验
+
+将浏览器确认框改为照片旁默认不勾选的外发同意项，勾选后才启用识别。重新查询时重置选择，请求继续绑定预期版本。真实浏览器已显示“MAPQC SHOP 42”“兴旺商店”和商铺建议，原类别为other；本次读取11/8真实响应缓存，提供器调用计数为0。个人Key尚未配置，手机现场导航按原待办保留。

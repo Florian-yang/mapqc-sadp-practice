@@ -1,0 +1,35 @@
+{
+  "updated_at": "2026-11-09T21:37:19.061490+08:00",
+  "sheet": "<学生学号姓名>每周工作小结",
+  "changed_cells": [
+    "C5",
+    "C9"
+  ],
+  "weekly_chars": 119,
+  "learning_chars": 55,
+  "before_sha256": "a1f43e74592c44cdc90d7b10dcb4c81f995d5a2a8e5d7c14f67df61240984e48",
+  "after_sha256": "8e2d4ddb0f9a5ad4db24c31680276f37b3abfe3f77c1e5a323e68ed32f2703d2",
+  "unrelated_cells_unchanged": true,
+  "unrelated_xml_and_binary_parts_byte_identical": true,
+  "all_sheet_settings_unchanged": true,
+  "C4_week8_unchanged": true,
+  "artifact_authoring": true,
+  "artifact_final_reimport_and_render": "final.png",
+  "narrow_ooxml_merge_reason": {
+    "export_dropped_parts": [
+      "docProps/app.xml",
+      "docProps/core.xml",
+      "docProps/custom.xml",
+      "xl/printerSettings/printerSettings1.bin",
+      "xl/worksheets/_rels/sheet1.xml.rels"
+    ],
+    "export_dropped_sheet_settings": [
+      "sheetViews",
+      "pageMargins",
+      "pageSetup"
+    ]
+  },
+  "preservation_method": "Authored values from artifact export merged into original C5/C9 cells; preserved all other original bytes and ZIP entries.",
+  "final_render_sha256": "4854efeda4950936c7b49a9d31792396f206c1ead91f79036b1b738abf264c44",
+  "final_render_identical_to_reviewed_artifact_image": true
+}

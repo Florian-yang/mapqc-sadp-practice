@@ -1,0 +1,13 @@
+PASS popup text stays out of HTML and uses attributed OSM tiles
+PASS arbitration status keeps orange priority over the unresolved error marker
+PASS category and progress filters form the correct query
+PASS device location draws returned route, instructions and live position
+PASS denied device location never submits a route
+PASS route errors remove old routes and never draw fallback geometry
+PASS stop and pagehide clear device watches
+PASS OCR requires a checked consent for each displayed photo and a configured key
+PASS partial OCR presents text and a suggestion without changing the POI
+PASS repeated recognition clicks share one outstanding request
+PASS late filter responses cannot replace a newer layer
+PASS late navigation and pagehide responses cannot restore an obsolete route
+12/12 map client scenarios passed. Synthetic DOM, Leaflet, location and API only.

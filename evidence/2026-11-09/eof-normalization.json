@@ -1,0 +1,28 @@
+{
+  "file": "tests/test_system_flow.py",
+  "reason": "git cached diff-check caught a new blank line at EOF",
+  "before_sha256": "8b88e38687cc5f7e04de09860a59ba44b00503fe07bbfed82f4be9589929d0b6",
+  "after_sha256": "b3548c669c15cea4cc2149ad0a3bf803f4bfaa930e7a53302b729a81494b3c23",
+  "python_ast_identical": true,
+  "fully_tested_archive_before_eof_sha256": "75bd36614093a869d5e62d1102e603802e1bad7ca50b0bf0431374547b18f0a5",
+  "final_archive_sha256": "79b55073ec52f760e3ffc5ca2e1f6f074f14566fd2b2e75104fff9e3e7f4d354",
+  "only_archive_content_delta": [
+    "tests/test_system_flow.py"
+  ],
+  "final_archive_affected_flow_retest": 1,
+  "real_broker_receipt": {
+    "scenario": "test_http_to_broker_full_dispute_map_and_ocr_flow",
+    "broker_pids": [
+      27816
+    ],
+    "outbox_events": 12,
+    "published_events": 12,
+    "delivered_events": 12,
+    "inbox_rows": 12,
+    "stream_messages_remaining": 0,
+    "stream_last_sequence": 12,
+    "consumer_ack_floor": 12,
+    "consumer_ack_pending": 0
+  },
+  "full_146_suite_and_20_frontend_results": "Retained from archive before EOF-only change; every other file hash identical"
+}

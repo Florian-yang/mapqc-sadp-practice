@@ -1,0 +1,2 @@
+C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/15.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: cannot open output file C:\Users\flori\Desktop\RuanJian\??\????\MapQC-Practice\dist\noodle_day9.exe: Invalid argument
+collect2.exe: error: ld returned 1 exit status

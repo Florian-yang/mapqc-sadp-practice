@@ -1,0 +1,23 @@
+{
+  "source_sha256": "9d75afa466e3a3ab0af6cba6fb7b22e065d4372b7a308288f629607b87ecb973",
+  "cases": [
+    {
+      "case": "egg_beef",
+      "exit_code": 0,
+      "expected": "热干面 + 煎蛋 + 牛肉 = 14.00 元",
+      "passed": true
+    },
+    {
+      "case": "double_egg",
+      "exit_code": 0,
+      "expected": "热干粉 + 煎蛋 + 煎蛋 = 10.00 元",
+      "passed": true
+    },
+    {
+      "case": "bad_index",
+      "exit_code": 1,
+      "expected": "编号无效",
+      "passed": true
+    }
+  ]
+}
