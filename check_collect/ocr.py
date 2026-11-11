@@ -5,6 +5,7 @@ import http.client
 import json
 import os
 import re
+import threading
 import time
 import urllib.parse
 import urllib.request
@@ -13,6 +14,8 @@ from .auth import AuthError
 
 
 OCR_ENDPOINT = 'https://api.ocr.space/parse/image'
+BAIDU_TOKEN_ENDPOINT = 'https://aip.baidubce.com/oauth/2.0/token'
+BAIDU_OCR_ENDPOINT = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic'
 MAX_PHOTO_BYTES = 1_000_000
 MAX_RESPONSE_BYTES = 256_000
 MAX_TEXT_CHARS = 10_000
@@ -56,7 +59,11 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
 
 def fetch_json(request):
     """Use the fixed HTTPS service without logging keys or following redirects."""
-    if request.full_url != OCR_ENDPOINT or request.get_method() != 'POST':
+    url = urllib.parse.urlsplit(request.full_url)
+    baidu_ocr = (url.scheme == 'https' and url.netloc == 'aip.baidubce.com'
+                 and url.path == '/rest/2.0/ocr/v1/general_basic' and not url.fragment
+                 and set(urllib.parse.parse_qs(url.query)) == {'access_token'})
+    if (request.full_url not in (OCR_ENDPOINT, BAIDU_TOKEN_ENDPOINT) and not baidu_ocr) or request.get_method() != 'POST':
         raise AuthError('OCR服务地址无效')
     try:
         opener = urllib.request.build_opener(_NoRedirect())
@@ -85,6 +92,8 @@ def _code(value, allowed):
 
 
 class OcrSpace:
+    name = 'OCR.Space'
+
     def __init__(self, api_key, transport=None):
         self.api_key = api_key.strip() if isinstance(api_key, str) else ''
         self.transport = transport if transport is not None else fetch_json
@@ -143,11 +152,86 @@ class OcrSpace:
                 'partial': exit_code == 2, 'suggested_category': suggest_category(text)}
 
 
+class BaiduOcr:
+    name = '百度OCR'
+
+    def __init__(self, api_key, secret_key, transport=None):
+        self.api_key = api_key.strip() if isinstance(api_key, str) else ''
+        self.secret_key = secret_key.strip() if isinstance(secret_key, str) else ''
+        self.transport = transport if transport is not None else fetch_json
+        self._token = ''
+        self._expires = 0
+        self._lock = threading.Lock()
+
+    @property
+    def configured(self):
+        return all(value and len(value) <= 1024 and all(32 < ord(c) < 127 for c in value)
+                   for value in (self.api_key, self.secret_key))
+
+    def _post(self, endpoint, fields):
+        request = urllib.request.Request(endpoint, data=urllib.parse.urlencode(fields).encode('ascii'),
+            headers={'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json'})
+        try:
+            result = self.transport(request)
+        except (OSError, ValueError, http.client.HTTPException):
+            raise AuthError('百度OCR连接或响应异常，请稍后重试') from None
+        if not isinstance(result, dict):
+            raise AuthError('百度OCR响应格式无效')
+        return result
+
+    def _access_token(self, rejected=None):
+        with self._lock:
+            if self._token and self._token != rejected and time.monotonic() < self._expires:
+                return self._token
+            data = self._post(BAIDU_TOKEN_ENDPOINT, {'grant_type': 'client_credentials',
+                'client_id': self.api_key, 'client_secret': self.secret_key})
+            token, lifetime = data.get('access_token'), data.get('expires_in')
+            if (not isinstance(token, str) or not token or len(token) > 4096
+                    or not all(32 < ord(c) < 127 for c in token)
+                    or type(lifetime) is not int or lifetime <= 0):
+                raise AuthError('百度OCR授权失败，请检查应用密钥和服务权限')
+            self._token = token
+            self._expires = time.monotonic() + max(0, lifetime - 60)
+            return token
+
+    def recognize(self, photo_bytes, language='auto'):
+        if not self.configured:
+            raise AuthError('请配置BAIDU_OCR_API_KEY和BAIDU_OCR_SECRET_KEY')
+        language = _language(language)
+        if (not isinstance(photo_bytes, bytes) or not 4 <= len(photo_bytes) <= MAX_PHOTO_BYTES
+                or not photo_bytes.startswith(b'\xff\xd8\xff') or not photo_bytes.endswith(b'\xff\xd9')):
+            raise AuthError('OCR仅支持1MB以内的已保存JPEG照片')
+        fields = {'image': base64.b64encode(photo_bytes).decode('ascii'),
+                  'language_type': 'ENG' if language == 'eng' else 'CHN_ENG', 'detect_direction': 'true'}
+        token = self._access_token()
+        for attempt in range(2):
+            data = self._post(BAIDU_OCR_ENDPOINT + '?' + urllib.parse.urlencode({'access_token': token}), fields)
+            if data.get('error_code') not in (110, 111) or attempt:
+                break
+            token = self._access_token(rejected=token)
+        if 'error_code' in data:
+            if data['error_code'] in (17, 18, 19):
+                raise AuthError('百度OCR调用额度或频率受限，请检查控制台')
+            raise AuthError('百度OCR识别失败，请检查服务权限或稍后重试')
+        words = data.get('words_result')
+        if (not isinstance(words, list) or len(words) > MAX_TEXT_CHARS
+                or type(data.get('words_result_num')) is not int or data['words_result_num'] != len(words)
+                or any(not isinstance(row, dict) or not isinstance(row.get('words'), str)
+                       or len(row['words']) > MAX_TEXT_CHARS for row in words)):
+            raise AuthError('百度OCR识别结果格式无效')
+        text = '\n'.join(row['words'] for row in words).strip()
+        if len(text) > MAX_TEXT_CHARS:
+            raise AuthError('OCR识别文字超过10000字')
+        return {'provider': self.name, 'text': text, 'language': language,
+                'partial': False, 'suggested_category': suggest_category(text)}
+
+
 class Ocr:
     def __init__(self, collection, provider=None):
         self.collection = collection
         self.store = collection.store
-        self.provider = provider if provider is not None else OcrSpace(os.getenv('OCR_SPACE_API_KEY', ''))
+        self.provider = provider if provider is not None else BaiduOcr(
+            os.getenv('BAIDU_OCR_API_KEY', ''), os.getenv('BAIDU_OCR_SECRET_KEY', ''))
         with self.store.connect() as db:
             db.execute('BEGIN IMMEDIATE')
             db.execute('''CREATE TABLE IF NOT EXISTS ocr_results(
@@ -189,7 +273,7 @@ class Ocr:
                 raise AuthError('POI版本已变化，请刷新照片并重新确认后识别')
             key = (poi_id, revision, photo_hash, language)
             cached = db.execute('SELECT * FROM ocr_results WHERE poi_id=? AND revision=? AND photo_sha256=? AND language=?', key).fetchone()
-            if cached:
+            if cached and cached['provider'] == getattr(self.provider, 'name', cached['provider']):
                 return self._result(cached)
 
         # No database transaction is held during the external request.
@@ -206,9 +290,12 @@ class Ocr:
             current_revision, current_hash, _ = self._snapshot(db, uid, poi_id)
             if (current_revision, current_hash) != (revision, photo_hash):
                 raise AuthError('POI版本或照片已变化，识别结果未保存，请刷新后重试')
-            db.execute('''INSERT OR IGNORE INTO ocr_results(
+            db.execute('''INSERT INTO ocr_results(
                 poi_id,revision,photo_sha256,language,provider,text,partial,suggested_category,created_ms)
-                VALUES(?,?,?,?,?,?,?,?,?)''',
+                VALUES(?,?,?,?,?,?,?,?,?) ON CONFLICT(poi_id,revision,photo_sha256,language)
+                DO UPDATE SET provider=excluded.provider,text=excluded.text,partial=excluded.partial,
+                suggested_category=excluded.suggested_category,created_ms=excluded.created_ms
+                WHERE ocr_results.provider != excluded.provider''',
                 key + (result['provider'], text, int(result['partial']), suggestion, time.time()*1000))
             saved = db.execute('SELECT * FROM ocr_results WHERE poi_id=? AND revision=? AND photo_sha256=? AND language=?', key).fetchone()
             return self._result(saved)

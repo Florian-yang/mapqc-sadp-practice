@@ -30,7 +30,7 @@ node "应用主机（当前本机）" <<device>> {
 package "外部平台" {
   component "微信开放平台" as WX
   component "OSRM路线" as OSRM
-  component "OCR.Space" as OCR
+  component "百度OCR" as OCR
 }
 node "OpenStreetMap" as OSM
 UI ..> HTTP : HTTP / JSON

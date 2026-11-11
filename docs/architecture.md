@@ -14,7 +14,7 @@
 | N层 | 界面；HTTP接入；采集、核验、异议、讨论、地图及OCR业务；数据访问；SQLite与照片文件 | 按职责组织变更。重采与第三方重采复用Collection校验，Maps/Ocr复用POI权限及版本 |
 | 局部事件消息 | 业务事务写待发送箱，Messaging经NATS JetStream投递到本人收件箱 | 群发与点发共用通道；消费者入库后确认，事件ID约束重复投递 |
 
-微信、路线和OCR通过WeChat、OsrmRouter、OcrSpace适配器接入。浏览器直接加载OpenStreetMap底图瓦片；应用密钥保存在服务端环境变量中。账号会话由Store处理，可信本机命令授予核验者与第三方角色。
+微信、路线和OCR通过WeChat、OsrmRouter、BaiduOcr适配器接入。浏览器直接加载OpenStreetMap底图瓦片；应用密钥保存在服务端环境变量中。账号会话由Store处理，可信本机命令授予核验者与第三方角色。
 
 ## 表2 质量特性与优缺点
 
@@ -31,7 +31,7 @@
 | 可维护性 | HTTP接入、业务和平台协议分开；采集、版本及消息逻辑复用 | 服务内SQL与业务仍有耦合；更换数据库前须梳理数据访问 |
 | 移植性 | 浏览器减少终端安装，后端使用Python及可配置路径 | 当前运行证据来自Windows本机；Linux、公网和不同手机未完成部署验收 |
 
-11/8已通过本应用调用真实OSRM路线及OCR.Space中英文识别，输入为合成数据，OCR使用公开测试Key。个人OCR Key尚未配置。平台联调与本地合成测试分开记录，见[地图与OCR](map-ocr-acceptance.md)、[消息投递](messaging-acceptance.md)及[讨论与异议](collaboration-acceptance.md)。
+11/8已通过本应用调用真实OSRM路线及OCR.Space中英文识别，输入为合成数据，OCR使用公开测试Key。11/11默认OCR已改为百度，百度密钥尚未配置。平台联调与本地合成测试分开记录，见[地图与OCR](map-ocr-acceptance.md)、[消息投递](messaging-acceptance.md)及[讨论与异议](collaboration-acceptance.md)。
 
 ## 课件和源码对应
 

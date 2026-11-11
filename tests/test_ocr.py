@@ -221,7 +221,7 @@ class OcrTests(unittest.TestCase):
             self.assertIs(provider.configured, False)
             with self.assertRaises(AuthError):
                 Ocr(self.collection).recognize(self.owner, self.poi)
-        with patch.dict('os.environ', {'OCR_SPACE_API_KEY': 'TEST_ONLY_KEY'}, clear=True):
+        with patch.dict('os.environ', {'BAIDU_OCR_API_KEY': 'TEST_ONLY_KEY', 'BAIDU_OCR_SECRET_KEY': 'TEST_ONLY_SECRET'}, clear=True):
             self.assertIs(Ocr(self.collection).provider.configured, True)
         self.assertEqual(self.count(), 0)
 

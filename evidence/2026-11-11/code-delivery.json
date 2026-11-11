@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-11",
+  "version": "1.0.0-rc.2",
+  "repository_tests": {
+    "passed": 165,
+    "skipped": 0,
+    "current_poi": 156,
+    "historical_loader": 9
+  },
+  "final_ocr_focused_tests": 31,
+  "extracted_source_tests": {
+    "passed": 156,
+    "skipped": 0
+  },
+  "frontend_synthetic_scenarios": 20,
+  "baidu_real_calls": 0,
+  "wechat_real_authorization": false,
+  "phone_upload": "User operated phone on hotspot HTTPS; stored JPEG hash, location fields and NATS reviewer delivery verified. Other physical workflows not replayed at user request.",
+  "package": {
+    "path": "dist\\综合实践源码.zip",
+    "bytes": 672492,
+    "sha256": "95d9ad72c8d782b7f08f935e92a84297ca0a9d929f0e9db80d6d895a3b9ee278",
+    "manifest_files": 78,
+    "includes_office": false,
+    "includes_runtime_credentials_photos_or_database": false
+  },
+  "review": "Independent read-only code/prose review completed; entry and README inconsistencies corrected.",
+  "office_status": "11/9 Office candidates unchanged; excluded from this source-only package.",
+  "test_package_note": "Final package requirements status wording was updated after extraction; all Python/JS/CJS files match the tested extracted copy byte-for-byte."
+}

@@ -63,7 +63,7 @@ function popup(feature){
   const details=element('a','查看POI记录');details.href='/poi/'+p.id;box.append(details,element('br'));
   const nav=element('button','导航至此POI');nav.type='button';nav.addEventListener('click',()=>navigate(feature));box.append(nav,element('br'));
   const consent=element('input');consent.type='checkbox';
-  const label=element('label');label.append(consent,element('span','同意将这张照片发送至OCR.Space'));
+  const label=element('label');label.append(consent,element('span','同意将这张照片发送至百度OCR'));
   const ocr=element('button','识别照片文字');ocr.type='button';ocr.disabled=true;
   consent.addEventListener('change',()=>{ocr.disabled=!consent.checked||mapNode.dataset.ocrReady!=='true';});
   ocr.addEventListener('click',()=>{if(consent.checked)return recognize(feature);});box.append(label,element('br'),ocr);

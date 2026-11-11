@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import ssl
 import threading
 import time
 from http.cookies import SimpleCookie, CookieError
@@ -253,7 +254,7 @@ def application(settings: Settings, provider=None,router=None,ocr_provider=None)
                         if set(value)!={'poi_id','latitude','longitude'}:raise AuthError('路线参数无效')
                         result=maps.route(uid,value['poi_id'],value['latitude'],value['longitude'])
                     else:
-                        if not set(value)<= {'language','confirmed_external','expected_revision'} or value.get('confirmed_external') is not True:raise AuthError('请先确认将选定照片发送至OCR.Space')
+                        if not set(value)<= {'language','confirmed_external','expected_revision'} or value.get('confirmed_external') is not True:raise AuthError('请先确认将选定照片发送至百度OCR')
                         revision=value.get('expected_revision')
                         if type(revision) is not int or not 1<=revision<=2147483647:raise AuthError('请刷新地图并确认照片版本')
                         result=ocr.recognize(uid,path.split('/')[3],value.get('language','auto'),expected_revision=revision)
@@ -383,9 +384,20 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--host', default='127.0.0.1')
     parser.add_argument('--port', type=int, default=8765)
+    parser.add_argument('--certfile', help='HTTPS certificate PEM')
+    parser.add_argument('--keyfile', help='HTTPS private key PEM')
     args = parser.parse_args()
     settings = Settings.from_env()
+    if bool(args.certfile) != bool(args.keyfile):
+        parser.error('--certfile和--keyfile须同时提供')
+    if args.certfile and not settings.origin.startswith('https://'):
+        parser.error('HTTPS服务须设置https的PUBLIC_ORIGIN')
     server = ThreadingHTTPServer((args.host, args.port), application(settings))
+    if args.certfile:
+        context=ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.minimum_version=ssl.TLSVersion.TLSv1_2
+        context.load_cert_chain(args.certfile,args.keyfile)
+        server.socket=context.wrap_socket(server.socket,server_side=True)
     print(f'check@collect: {settings.origin} (WeChat configured: {settings.configured})')
     try:
         server.serve_forever()

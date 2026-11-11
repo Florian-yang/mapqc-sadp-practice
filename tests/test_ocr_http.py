@@ -11,7 +11,7 @@ from http.server import ThreadingHTTPServer
 from PIL import Image
 from check_collect.auth import Store, Settings
 from check_collect.collection import Collection
-from check_collect.ocr import OcrSpace
+from check_collect.ocr import BaiduOcr, BAIDU_TOKEN_ENDPOINT
 from check_collect.server import application
 
 
@@ -27,9 +27,11 @@ class OcrHttpTests(unittest.TestCase):
         self.requests=[]
         def transport(request):
             self.requests.append(request)
-            return {'IsErroredOnProcessing':False,'OCRExitCode':1,'ParsedResults':[{'FileParseExitCode':1,'ParsedText':'MAPQC SHOP <42>'}]}
+            if request.full_url == BAIDU_TOKEN_ENDPOINT:
+                return {'access_token':'synthetic-token','expires_in':3600}
+            return {'words_result_num':1,'words_result':[{'words':'MAPQC SHOP <42>'}]}
         self.settings=Settings('http://127.0.0.1:8765',database=self.store.path)
-        self.server=ThreadingHTTPServer(('127.0.0.1',0),application(self.settings,ocr_provider=OcrSpace('synthetic-test-key',transport)))
+        self.server=ThreadingHTTPServer(('127.0.0.1',0),application(self.settings,ocr_provider=BaiduOcr('synthetic-test-key','synthetic-secret',transport)))
         threading.Thread(target=self.server.serve_forever,daemon=True).start()
         self.addCleanup(self.server.server_close);self.addCleanup(self.server.shutdown)
 
@@ -46,7 +48,8 @@ class OcrHttpTests(unittest.TestCase):
         status,result=self.request(value,self.token)
         self.assertEqual(status,200);self.assertEqual(result['text'],'MAPQC SHOP <42>')
         self.assertEqual(result['suggested_category'],'shop')
-        self.assertEqual(self.request(value,self.token)[1],result);self.assertEqual(len(self.requests),1)
+        self.assertEqual(result['provider'],'百度OCR')
+        self.assertEqual(self.request(value,self.token)[1],result);self.assertEqual(len(self.requests),2)
         self.assertEqual(self.collection.list_owned(self.uid)[0]['category'],'other')
 
     def test_confirmation_and_revision_are_required_before_external_call(self):

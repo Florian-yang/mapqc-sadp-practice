@@ -7,7 +7,7 @@ control Maps
 control Ocr
 database "POI / 版本 / 照片 / OCR缓存" as DB
 participant "OSRM适配器" as Route
-participant "OCR.Space适配器" as Text
+participant "百度OCR适配器" as Text
 用户 -> Web : 类别、进展查询
 Web -> HTTP : GET /api/map
 HTTP -> Maps : 校验登录角色

@@ -73,7 +73,7 @@
 <rect x="1041" y="762" width="24" height="31" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
 <rect x="1035" y="767" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
 <rect x="1035" y="781" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
-<text x="990.0" y="820" text-anchor="middle" font-size="25" font-weight="normal">OCR.Space</text>
+<text x="990.0" y="820" text-anchor="middle" font-size="25" font-weight="normal">百度OCR</text>
 <path d="M20,752 L32,740 H267 V930 L255,942 H20 Z M20,752 H255 L267,740 M255,752 V942" fill="#f8faf8" stroke="#52745f" stroke-width="2"/>
 <text x="137.5" y="787" text-anchor="middle" font-size="22" font-weight="normal">«node»</text>
 <text x="137.5" y="826" text-anchor="middle" font-size="25" font-weight="bold">OpenStreetMap</text>
