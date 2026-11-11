@@ -18,7 +18,7 @@ from .chat import Chat
 from .disputes import Disputes, DECISIONS
 from .maps import Maps
 from .ocr import Ocr
-from . import review_pages, chat_pages, dispute_pages, map_page
+from . import review_pages, chat_pages, dispute_pages, map_page, notification_pages
 
 
 def application(settings: Settings, provider=None,router=None,ocr_provider=None):
@@ -143,7 +143,7 @@ def application(settings: Settings, provider=None,router=None,ocr_provider=None)
             elif path in ('/notifications','/api/notifications'):
                 if not uid:
                     self.reply_error(401,'请先登录');return
-                if path=='/notifications': self.reply(200,self.page(notifications.page(uid)))
+                if path=='/notifications': self.reply(200,self.page(notification_pages.page(notifications.list_owned(uid))))
                 else:self.reply(200,json.dumps(notifications.list_owned(uid),ensure_ascii=False),content_type='application/json; charset=utf-8')
             elif path == '/static/capture.js':
                 self.reply(200,(Path(__file__).parent/'static/capture.js').read_bytes(),content_type='text/javascript; charset=utf-8')
@@ -327,9 +327,7 @@ def application(settings: Settings, provider=None,router=None,ocr_provider=None)
                         if self.headers.get('Content-Type','').split(';')[0]!='application/json': raise AuthError('上传格式须为JSON')
                         value=json.loads(self.rfile.read(length).decode('utf-8'))
                         poi_id=collection.create(uid,value)
-                        with store.connect() as db:
-                            status=db.execute('SELECT status FROM pois WHERE id=? AND owner=?',(poi_id,uid)).fetchone()['status']
-                        self.reply(201,json.dumps({'id':poi_id,'status':status}),content_type='application/json; charset=utf-8')
+                        self.reply(201,json.dumps(collection.get_owned(uid,poi_id)),content_type='application/json; charset=utf-8')
                     else:
                         collection.enroll(uid);self.reply(303,location='/collect')
                 except (AuthError,ValueError) as exc:

@@ -19,5 +19,4 @@ else 定位成功
  DB --> C : POI编号
  C --> Web : 待核验记录
 end
-note over Web,Device : API处理器已用测试替身验证；HTTPS手机相机/GPS尚待真机验收
 @enduml

@@ -14,10 +14,14 @@
 
 ## 下一步
 
-当前整理1.0.0-rc.2源码候选包。定时任务已取消，本轮只完成接入代码和提交说明，平台申请、真实微信与百度OCR联调、公网和现场导航暂不推进。旧Office报告和综合实践.zip为11/9候选材料，本轮源码包不含Office，报告另行同步。
+当前为1.0.0-rc.3，已整理源码与完整提交包。定时任务已取消，本轮只完成接入代码和提交说明，平台申请、真实微信与百度OCR联调、公网和现场导航暂不推进。报告及第10周Excel已同步当前图文；源码包单独提供，完整包含报告与周表。
 
 ## 入口与截止
 
 - 目录C:/Users/flori/Desktop/RuanJian/作业/综合实践/MapQC-Practice，私有仓库https://github.com/Florian-yang/mapqc-sadp-practice。
 - 使用AGENTS约定Python 3.13，依赖requirements-web.txt。本机合成演示按docs/demo.md创建独立数据目录，拒绝覆盖已有数据库。
 - 定时推进已取消。教师截止11/11北京时间22:30，到时停止开发提交并如实保留未验收项。
+
+## 职责整理与交付复核
+
+控制器通过Collection.get_owned读取上传结果，通知服务仅处理数据，notification_pages负责页面渲染。图及说明同步，独立代码与文字复核均通过；报告保留教师封面及评价区。具体验证与包摘要见evidence/2026-11-11/refactor-delivery.json。

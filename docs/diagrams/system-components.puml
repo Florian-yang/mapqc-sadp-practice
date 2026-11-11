@@ -11,10 +11,10 @@ node "用户终端" <<device>> {
 node "应用主机（当前本机）" <<device>> {
   node "Python Web" <<executionEnvironment>> {
     package "② 界面控制" {
-      component "HTTP控制器" as HTTP
+      component "HTTP控制器 / 页面函数" as HTTP
     }
     package "③ 业务" {
-      component "采集 / 核验 / 异议 / 讨论\n认证 / 地图 / OCR" as Business
+      component "采集 / 核验 / 异议 / 讨论\n认证 / 通知 / 地图 / OCR" as Business
     }
     package "④ 数据访问" {
       component "Store / 服务内SQL / 照片读写" as Access

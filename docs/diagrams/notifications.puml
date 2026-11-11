@@ -24,5 +24,5 @@ Consumer -> Inbox : 同事务去重入箱、记录delivered_ms
 Consumer -> NATS : 入库后确认消费
 采集者 -> Web : 查看本人通知
 Web -> Inbox : 按登录用户读取 / 标记已读
-note over Producer, Consumer : 未确认时重试；入箱不等于已读\n本机验证不代替公网或真机验收
+note over Producer, Consumer : 未确认时重试；入箱与已读分别记录
 @enduml

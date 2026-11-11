@@ -143,6 +143,15 @@ class Collection:
         fingerprint=hashlib.sha256(json.dumps(fields,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
         return fields,fingerprint,photo
 
+    def get_owned(self,uid,poi_id):
+        self._require(uid)
+        if not isinstance(poi_id,str) or not re.fullmatch(r'[a-f0-9]{32}',poi_id):
+            raise AuthError('记录不存在或无权访问')
+        with self.store.connect() as db:
+            row=db.execute('SELECT id,status FROM pois WHERE id=? AND owner=?',(poi_id,uid)).fetchone()
+            if not row: raise AuthError('记录不存在或无权访问')
+            return dict(row)
+
     def list_owned(self,uid):
         self._require(uid)
         with self.store.connect() as db:

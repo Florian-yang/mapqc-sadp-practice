@@ -26,4 +26,4 @@ NATS未安装时按[消息说明](messaging-acceptance.md)准备。三个账号�
 5. 第三方接收任务；手机可访问的HTTPS入口配置后，进行实拍重采并提交结论。
 6. 完成重采与裁决后，双方查看结果、历史照片及地图进展。
 
-初始照片和位置是合成样例。微信应用及域名、个人OCR Key尚未配置；真实微信、HTTPS手机采集和现场导航待验收。第三方步骤须补实拍，不把预置照片当作现场重采。配置见[微信](wechat-setup.md)、[地图与OCR](map-ocr-acceptance.md)。
+预置照片和位置为演示数据；手机采集使用实时拍摄与定位。手机入口见[热点演示](hotspot-demo.md)，平台配置见[微信](wechat-setup.md)、[地图与OCR](map-ocr-acceptance.md)。

@@ -21,6 +21,7 @@ from check_collect.collection import Collection
 from check_collect.review import Review
 from check_collect.roles import grant_reviewer, grant_role
 from check_collect.chat import Chat
+from check_collect.notification_pages import page as notification_page
 from check_collect.disputes import Disputes
 from check_collect.events import queue_event
 from check_collect.notifications import Notifications
@@ -257,7 +258,7 @@ class MessagingIntegrationTests(unittest.IsolatedAsyncioTestCase):
         for uid in (self.owner,self.reviewer):
             final=[r for r in self.notices.list_owned(uid) if r['event_type']=='dispute.finalized']
             self.assertEqual(len(final),1);self.assertEqual(final[0]['payload']['decision'],'error_confirmed')
-            self.assertIn('/dispute/'+case,self.notices.page(uid))
+            self.assertIn('/dispute/'+case,notification_page(self.notices.list_owned(uid)))
         self.assertEqual(disputes.detail(staff,case)['case']['status'],'finalized')
 
     async def test_chat_role_revocation_does_not_leak_text_in_notification(self):
@@ -267,5 +268,5 @@ class MessagingIntegrationTests(unittest.IsolatedAsyncioTestCase):
         with self.store.connect() as db:db.execute("DELETE FROM user_roles WHERE user_id=? AND role='collector'",(self.other,))
         self.assertEqual(await self.worker.run_once(),{'published':1,'received':1})
         self.assertNotIn(secret,json.dumps(self.notices.list_owned(self.other),ensure_ascii=False))
-        self.assertNotIn(secret,self.notices.page(self.other))
+        self.assertNotIn(secret,notification_page(self.notices.list_owned(self.other)))
         with self.assertRaises(AuthError):chat.messages(self.other,'collectors')

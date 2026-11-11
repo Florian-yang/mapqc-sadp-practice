@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-11",
+  "version": "1.0.0-rc.3",
+  "changes": [
+    "Controller delegates owned POI summary to Collection.get_owned",
+    "Notification data service separated from pure page renderer",
+    "Diagram sources and report synchronized",
+    "Delivery prose shortened; historical development records kept outside packages"
+  ],
+  "validation": {
+    "repository_python": 165,
+    "current_poi_in_extracted_package": 156,
+    "historical_loader_only_in_repo": 9,
+    "skipped": 0,
+    "frontend_synthetic_scenarios": 20,
+    "extracted_frontend_synthetic_scenarios": 20
+  },
+  "independent_reviews": {
+    "architecture_refactor_review": "passed code, diagrams and actual package manifest",
+    "teacher_text_audit": "passed final ZIP text including Word, Excel and PDF; no authorship inference"
+  },
+  "report": {
+    "pages": 5,
+    "all_pages_visually_checked": true,
+    "corrected_component_render": "Cairo; initial font/line rendering issue fixed before delivery",
+    "teacher_cover_and_assessment_preserved": true
+  },
+  "weekly": {
+    "changed_cells": [
+      "C5 wording only",
+      "C6 actual week10 work"
+    ],
+    "all_other_values_and_package_parts_preserved": true
+  },
+  "packages": [
+    {
+      "file": "综合实践源码.zip",
+      "files": 78,
+      "bytes": 668271,
+      "sha256": "cdfac75197b00be6959b5e9b2a9c2896de07afe796ffcdd1a76cf9f8b387bea4"
+    },
+    {
+      "file": "综合实践.zip",
+      "files": 81,
+      "bytes": 1372622,
+      "sha256": "2688e1afdbedb49272dd1fe0131045ce9ce46b268455e3b226ec6e8c4021f400"
+    }
+  ],
+  "platforms": {
+    "baidu_real_calls_this_task": 0,
+    "wechat_real_authorization": false
+  },
+  "scope": "Small responsibility cleanup and delivery synchronization; no general repository framework, remote deployment or research work."
+}

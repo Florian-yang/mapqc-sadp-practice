@@ -18,5 +18,4 @@ WX --> HTTP : openid与访问凭据
 HTTP -> Auth : 按appid/openid关联账号，禁止跨账号覆盖
 Auth --> HTTP : 新会话
 HTTP --> 浏览器 : 会话cookie + 跳回首页
-note over HTTP,WX : 真实微信段待配置应用/域名后联调；本地协议测试不能代替扫码验收
 @enduml

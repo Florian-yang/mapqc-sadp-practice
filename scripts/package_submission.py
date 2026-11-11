@@ -15,7 +15,7 @@ def package(destination=None, include_reports=True):
         files.extend(p for p in (ROOT/folder).rglob('*') if p.is_file() and p.suffix in ('.py','.js','.css','.svg','.png','.ps1','.md','.cpp') or p.is_file() and p.name=='LEAFLET-LICENSE')
     files.extend(p for p in (ROOT/'tests').iterdir() if p.suffix in ('.py','.cjs') and p.name!='test_loaders.py')
     files.extend(ROOT/name for name in ('README.md','requirements-web.txt','requirements-demo.txt','.env.example','scripts/get_nats.py','scripts/create_demo.py','scripts/start_hotspot.py','scripts/allow_hotspot.ps1'))
-    for name in ('architecture.md','assignment-original.md','requirements.md','plan.md','demo.md','hotspot-demo.md','deployment.md','wechat-setup.md','map-ocr-acceptance.md','messaging-acceptance.md','collaboration-acceptance.md'):
+    for name in ('architecture.md','assignment-original.md','requirements.md','demo.md','hotspot-demo.md','deployment.md','wechat-setup.md','map-ocr-acceptance.md','messaging-acceptance.md','collaboration-acceptance.md'):
         files.append(ROOT/'docs'/name)
     files.extend(p for p in (ROOT/'docs/diagrams').iterdir() if p.suffix=='.puml' or p.name.startswith(('system-components.','requirements.')))
     if include_reports:
@@ -25,7 +25,7 @@ def package(destination=None, include_reports=True):
     with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED) as archive:
         for p in files:
             archive.write(p,'综合实践/'+p.relative_to(ROOT).as_posix())
-        archive.writestr('综合实践/文件清单.json',json.dumps({'created_at':datetime.now().astimezone().isoformat(),'version':'1.0.0-rc.2','files':manifest},ensure_ascii=False,indent=2)+'\n')
+        archive.writestr('综合实践/文件清单.json',json.dumps({'created_at':datetime.now().astimezone().isoformat(),'version':'1.0.0-rc.3','files':manifest},ensure_ascii=False,indent=2)+'\n')
     return output,manifest
 
 

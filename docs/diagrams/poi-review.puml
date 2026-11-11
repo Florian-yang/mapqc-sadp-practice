@@ -1,5 +1,5 @@
 @startuml
-title 核验错误与采集者处理（11月5日本地实现）
+title 核验错误与采集者处理
 actor 核验者
 actor 采集者
 boundary Web页面
@@ -35,5 +35,4 @@ Review -> SQLite : 保存理由，状态disputed
 end
 Review -> SQLite : 保存处理记录、核验者通知待发送事件
 Review -> SQLite : COMMIT
-note over Review, SQLite : 待发送箱尚无消费者，未计作消息投递\n真实手机与HTTPS仍待验收
 @enduml

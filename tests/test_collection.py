@@ -37,6 +37,7 @@ class CollectionTests(unittest.TestCase):
         self.service.enroll(self.uid)
         poi=self.service.create(self.uid,self.value)
         service=Collection(Store(self.store.path))
+        self.assertEqual(service.get_owned(self.uid,poi),{'id':poi,'status':'pending'})
         row=service.list_owned(self.uid)[0]
         self.assertEqual((row['id'],row['latitude'],row['longitude'],row['status']),(poi,30.0,114.0,'pending'))
         self.assertEqual((row['captured_ms'],row['located_ms']),(self.value['captured_ms'],self.value['located_ms']))
@@ -55,6 +56,8 @@ class CollectionTests(unittest.TestCase):
         poi=self.service.create(self.uid,self.value)
         self.assertEqual(self.service.list_owned(self.other),[])
         with self.assertRaises(AuthError):self.service.photo(self.other,poi)
+        with self.assertRaises(AuthError):self.service.get_owned(self.other,poi)
+        with self.assertRaises(AuthError):self.service.get_owned(self.uid,'f'*32)
         with self.assertRaises(AuthError):self.service.photo(self.uid,'../../other')
 
     def test_position_and_timestamps_required_and_finite(self):

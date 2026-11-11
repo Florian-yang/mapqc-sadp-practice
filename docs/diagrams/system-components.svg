@@ -25,14 +25,14 @@
 <rect x="771" y="372" width="24" height="31" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
 <rect x="765" y="377" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
 <rect x="765" y="391" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
-<text x="572.5" y="420" text-anchor="middle" font-size="27" font-weight="normal">HTTP控制器</text>
+<text x="572.5" y="420" text-anchor="middle" font-size="27" font-weight="normal">HTTP控制器 / 页面函数</text>
 <text x="335" y="495" text-anchor="start" font-size="27" font-weight="bold">③ 业务</text>
 <rect x="335" y="515" width="475" height="120" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
 <rect x="771" y="527" width="24" height="31" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
 <rect x="765" y="532" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
 <rect x="765" y="546" width="11" height="7" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
 <text x="572.5" y="575" text-anchor="middle" font-size="27" font-weight="normal">采集 · 核验 · 异议 · 讨论</text>
-<text x="572.5" y="610" text-anchor="middle" font-size="27" font-weight="normal">认证 · 地图 · OCR</text>
+<text x="572.5" y="610" text-anchor="middle" font-size="27" font-weight="normal">认证 · 通知 · 地图 · OCR</text>
 <text x="335" y="690" text-anchor="start" font-size="27" font-weight="bold">④ 数据访问</text>
 <rect x="335" y="710" width="475" height="115" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>
 <rect x="771" y="722" width="24" height="31" fill="#eef5ec" stroke="#52745f" stroke-width="2"/>

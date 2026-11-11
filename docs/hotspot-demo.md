@@ -1,6 +1,6 @@
 # 手机热点演示
 
-电脑开启移动热点，手机连接后，在热点网卡地址运行HTTPS后台。启动脚本只绑定指定网卡；NATS只监听本机。此模式用于局域网真机演示，Internet访问单独验收。
+电脑开启移动热点，手机连接后，在热点网卡地址运行HTTPS后台。启动脚本只绑定指定网卡；NATS只监听本机。此模式用于局域网手机演示。
 
 安装requirements-demo.txt后，在项目目录执行：
 
@@ -16,6 +16,6 @@
 
 若手机无法打开设置页，在电脑以管理员PowerShell运行`./scripts/allow_hotspot.ps1 -Address 192.168.137.1`。它只允许所选网卡同一/24网段访问8443和8444，不关闭防火墙。此操作由用户手动执行。结束后运行`Remove-NetFirewallRule -Name CheckCollect-Hotspot-Demo`移除规则。
 
-创建空文件`data/hotspot-demo/stop`可停止启动器及其三个子进程。数据保留，重启不覆盖已有演示数据库。预置照片、位置与账号均为合成数据，实际手机拍摄、定位和提交须另留验证记录。
+创建空文件`data/hotspot-demo/stop`可停止启动器及其三个子进程。数据保留，重启不覆盖已有演示数据库。首次启动建立演示账号并预置合成照片和位置，手机上传保存在同一演示数据库中。
 
 依据：[Safari相机的安全上下文要求](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia)、[Apple手动证书信任说明](https://support.apple.com/en-us/102390)。
