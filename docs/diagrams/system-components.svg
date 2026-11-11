@@ -2,7 +2,7 @@
 <defs><marker id="dep" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M1,1 L11,5 L1,9" fill="none" stroke="#243d34" stroke-width="1.5"/></marker></defs>
 <rect width="1120" height="1430" fill="white"/>
 <style>text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#172c24}.dep{fill:none;stroke:#243d34;stroke-width:2;stroke-dasharray:8 6;marker-end:url(#dep)}</style>
-<text x="560" y="47" text-anchor="middle" font-size="34" font-weight="bold">check@collect 构件与部署</text>
+<text x="560" y="47" text-anchor="middle" font-size="34" font-weight="bold">check@collect 总体组织架构</text>
 <path d="M20,212 L32,200 H267 V560 L255,572 H20 Z M20,212 H255 L267,200 M255,212 V572" fill="#f8faf8" stroke="#52745f" stroke-width="2"/>
 <text x="137.5" y="247" text-anchor="middle" font-size="22" font-weight="normal">«device»</text>
 <text x="137.5" y="286" text-anchor="middle" font-size="27" font-weight="bold">用户终端</text>

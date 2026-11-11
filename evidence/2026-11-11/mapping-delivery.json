@@ -1,0 +1,37 @@
+{
+  "packages": [
+    {
+      "file": "综合实践源码.zip",
+      "sha256": "42e49f3782c09a4a243fa517955ce8b7b4d85fee6c7bc0e1030d446d389c3346",
+      "files": 78
+    },
+    {
+      "file": "综合实践.zip",
+      "sha256": "601534d5aa69aa7ec332da5261fc5c281f7136bd5b815ecb32cfe1c099a8d693",
+      "files": 81
+    }
+  ],
+  "executable_sources_unchanged": true,
+  "desktop_synced": true,
+  "report_pages": 5,
+  "date": "2026-11-11",
+  "definition": [
+    "总体组织架构图",
+    "解决方案映射表",
+    "质量属性表"
+  ],
+  "mapping_rows": 6,
+  "quality_order": [
+    "功能适用性",
+    "可靠性",
+    "性能效率",
+    "操控性",
+    "安全性",
+    "兼容性",
+    "可维护性",
+    "移植性"
+  ],
+  "independent_review": "architecture and prose passed",
+  "change": "Replace previous style/responsibility table with requirement-solution-component mapping; align diagram and table headings.",
+  "validation": "All 5 PDF pages inspected; executable source entries identical to prior tested package; no extra test run."
+}
