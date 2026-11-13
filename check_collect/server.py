@@ -18,7 +18,7 @@ from .chat import Chat
 from .disputes import Disputes, DECISIONS
 from .maps import Maps
 from .ocr import Ocr
-from . import review_pages, chat_pages, dispute_pages, map_page, notification_pages
+from . import review_pages, chat_pages, dispute_pages, map_page, notification_pages, layout
 
 
 def application(settings: Settings, provider=None,router=None,ocr_provider=None):
@@ -63,7 +63,10 @@ def application(settings: Settings, provider=None,router=None,ocr_provider=None)
             self.send_header('Referrer-Policy', 'strict-origin-when-cross-origin' if is_map else 'same-origin')
             self.send_header('X-Content-Type-Options', 'nosniff')
             tile_source=' https://tile.openstreetmap.org' if is_map else ''
-            self.send_header('Content-Security-Policy', "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self' data:"+tile_source+"; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'")
+            form_targets="'self'"
+            if settings.configured and urlsplit(self.path).path in ('/','/auth/wechat/login','/auth/wechat/bind'):
+                form_targets+=' https://open.weixin.qq.com'
+            self.send_header('Content-Security-Policy', "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self' data:"+tile_source+"; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; form-action "+form_targets+"; frame-ancestors 'none'; base-uri 'none'")
             self.send_header('Permissions-Policy', 'camera=(self), geolocation=(self), microphone=()')
             if location:
                 self.send_header('Location', location)
@@ -75,7 +78,14 @@ def application(settings: Settings, provider=None,router=None,ocr_provider=None)
             self.wfile.write(data)
 
         def page(self, content):
-            return '<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>check@collect</title><style>body{font:18px/1.7 system-ui;max-width:640px;margin:8vh auto;padding:24px;color:#20352c;background:#f5f8f5}main{padding:28px;background:white;border:1px solid #dbe4dd;border-radius:14px}h1{font-size:28px}button{padding:12px 20px;background:#19734d;color:white;border:0;border-radius:7px;font-size:17px;cursor:pointer}a{color:#19734d}code{overflow-wrap:anywhere}</style><main><h1>check@collect</h1>' + content + '</main></html>'
+            uid=store.user(self.cookies().get('cc_session',''))
+            username=None;roles=()
+            if uid:
+                with store.connect() as db:
+                    account=db.execute('SELECT username FROM credentials WHERE user_id=?',(uid,)).fetchone()
+                    username=account['username'] if account else '微信用户'
+                    roles=tuple(r['role'] for r in db.execute('SELECT role FROM user_roles WHERE user_id=?',(uid,)))
+            return layout.page(content,urlsplit(self.path).path,username,notifications.unread_count(uid) if uid else 0,roles)
 
         def reply_error(self,status,message):
             if urlsplit(self.path).path.startswith('/api/'):
@@ -89,6 +99,9 @@ def application(settings: Settings, provider=None,router=None,ocr_provider=None)
             session = cookies.get('cc_session', '')
             uid = store.user(session)
             if path == '/':
+                desktop=parse_qs(urlsplit(self.path).query).get('desktop')==['1']
+                if uid and desktop:
+                    self.reply(303,location='/map');return
                 if uid:
                     body = f'<p>已登录</p><p>账号：<code>{html.escape(uid)}</code></p><p>微信身份：{"已绑定" if store.bound(uid) else "未绑定"}</p>'
                     if settings.configured:
@@ -108,11 +121,13 @@ def application(settings: Settings, provider=None,router=None,ocr_provider=None)
                     if any(collection.has_role(uid,r) for r in ('collector','reviewer','third_party')):
                         body += '<p><a href="/disputes">异议处理</a> · <a href="/map">POI地图</a></p>'
                 elif settings.configured:
-                    body = '<p>POI数据采集与核验</p><p>使用微信身份登录，首次授权后建立本系统账号。</p><form action="/auth/wechat/login" method="post"><button>微信扫码登录</button></form>'
+                    body = f'<p>POI数据采集与核验</p><p>使用微信身份登录，首次授权后建立本系统账号。</p><form action="/auth/wechat/login" method="post"><button>{settings.wechat_login_label}</button></form>'
                 else:
                     body = '<p>POI数据采集与核验</p><p>微信登录待配置</p><p>尚未配置微信应用与授权回调地址，当前无法进行真实扫码登录。</p>'
                 if not uid:
-                    body += '<hr><p>也可先建立本系统账号，随后绑定微信。</p><form action="/auth/local/login" method="post"><p><label>账号 <input name="username" required minlength="3" maxlength="40" autocomplete="username"></label></p><p><label>密码 <input type="password" name="password" required minlength="12" maxlength="128" autocomplete="current-password"></label></p><button>账号登录</button> <button formaction="/auth/local/register">注册账号</button></form>'
+                    body += '<hr><p>也可先建立本系统账号，随后绑定微信。</p><form action="/auth/local/login" method="post"><p><label>账号 <input name="username" required minlength="3" maxlength="40" autocomplete="username"></label></p><p><label>密码 <input type="password" name="password" required minlength="8" maxlength="128" autocomplete="current-password"></label></p><button>账号登录</button> <button formaction="/auth/local/register">注册账号</button></form>'
+                    if desktop:
+                        body=body.replace('<form action="/auth/local/login" method="post">','<h2>登录地图工作台</h2><form action="/auth/local/login" method="post"><input type="hidden" name="next" value="map">')
                 self.reply(200, self.page(body))
             elif path in ('/map','/api/map'):
                 try:
@@ -125,8 +140,8 @@ def application(settings: Settings, provider=None,router=None,ocr_provider=None)
                         value=maps.features(uid,query.get('category',[None])[0],query.get('status',[None])[0])
                         self.reply(200,json.dumps(value,ensure_ascii=False),content_type='application/geo+json; charset=utf-8')
                 except AuthError as exc:self.reply_error(403,str(exc))
-            elif path in ('/static/map.js','/static/vendor/leaflet.js','/static/vendor/leaflet.css'):
-                files={'/static/map.js':('map.js','text/javascript'),'/static/vendor/leaflet.js':('vendor/leaflet.js','text/javascript'),'/static/vendor/leaflet.css':('vendor/leaflet.css','text/css')}
+            elif path in ('/static/map.js','/static/desktop.css','/static/layout.css','/static/notifications.js','/static/vendor/leaflet.js','/static/vendor/leaflet.css'):
+                files={'/static/map.js':('map.js','text/javascript'),'/static/desktop.css':('desktop.css','text/css'),'/static/layout.css':('layout.css','text/css'),'/static/notifications.js':('notifications.js','text/javascript'),'/static/vendor/leaflet.js':('vendor/leaflet.js','text/javascript'),'/static/vendor/leaflet.css':('vendor/leaflet.css','text/css')}
                 name,mime=files[path]
                 self.reply(200,(Path(__file__).parent/'static'/name).read_bytes(),content_type=mime+'; charset=utf-8')
             elif path=='/chats' or path.startswith('/chat/') or path in ('/disputes','/api/disputes') or path.startswith(('/dispute/','/api/disputes/')):
@@ -140,10 +155,11 @@ def application(settings: Settings, provider=None,router=None,ocr_provider=None)
                     elif path.startswith('/api/disputes/') and len(path.split('/'))==4:self.reply(200,json.dumps(disputes.detail(uid,path.split('/')[3]),ensure_ascii=False),content_type='application/json; charset=utf-8')
                     else:self.reply(404)
                 except AuthError as exc:self.reply_error(403,str(exc))
-            elif path in ('/notifications','/api/notifications'):
+            elif path in ('/notifications','/api/notifications','/api/notifications/unread'):
                 if not uid:
                     self.reply_error(401,'请先登录');return
-                if path=='/notifications': self.reply(200,self.page(notification_pages.page(notifications.list_owned(uid))))
+                if path=='/api/notifications/unread':self.reply(200,json.dumps({'count':notifications.unread_count(uid)}),content_type='application/json; charset=utf-8')
+                elif path=='/notifications': self.reply(200,self.page(notification_pages.page(notifications.list_owned(uid))))
                 else:self.reply(200,json.dumps(notifications.list_owned(uid),ensure_ascii=False),content_type='application/json; charset=utf-8')
             elif path == '/static/capture.js':
                 self.reply(200,(Path(__file__).parent/'static/capture.js').read_bytes(),content_type='text/javascript; charset=utf-8')
@@ -358,7 +374,7 @@ def application(settings: Settings, provider=None,router=None,ocr_provider=None)
                         raise AuthError('请填写账号与密码')
                     _, token = store.local_account(fields['username'][0], fields['password'][0], path.endswith('register'))
                     if session: store.logout(session)
-                    self.reply(303, location='/', cookies=[self.cookie('cc_session', token, 7200)])
+                    self.reply(303, location='/map' if fields.get('next')==['map'] else '/', cookies=[self.cookie('cc_session', token, 7200)])
                 except (AuthError, ValueError) as exc:
                     self.reply(400, self.page('<p>'+html.escape(str(exc) if isinstance(exc,AuthError) else '表单无效')+'</p><a href="/">返回</a>'))
             elif path == '/auth/logout':

@@ -3,6 +3,7 @@ const mapNode=document.getElementById('poi-map'), notice=document.getElementById
 const filters=document.getElementById('map-filter'), summary=document.getElementById('route-summary');
 const stepsNode=document.getElementById('route-steps'), ocrNode=document.getElementById('ocr-result');
 const stopButton=document.getElementById('stop-navigation');
+const listNode=document.getElementById('poi-list'),detailNode=document.getElementById('poi-detail');
 const categories={house:'房屋',shop:'商铺',bus_stop:'公交站',greenery:'绿化',scenic:'景点',other:'其他'};
 const statuses={pending:'待核验',needs_action:'待采集者处理',disputed:'采集者已驳回',under_arbitration:'第三方处理中',finalized:'第三方已裁决'};
 const modifiers={left:'左转',right:'右转','slight left':'稍向左','slight right':'稍向右','sharp left':'向左急转','sharp right':'向右急转',straight:'直行',uturn:'掉头'};
@@ -69,6 +70,30 @@ function popup(feature){
   ocr.addEventListener('click',()=>{if(consent.checked)return recognize(feature);});box.append(label,element('br'),ocr);
   return box;
 }
+function showDetail(feature){
+  if(!detailNode)return;
+  detailNode.replaceChildren(popup(feature));
+  ocrNode.replaceChildren();
+  if(listNode)for(const row of listNode.children)row.className='poi-row'+(row.dataset.poiId===feature.properties.id?' selected':'');
+}
+function showList(features){
+  if(!listNode)return;
+  listNode.replaceChildren();
+  document.getElementById('poi-count').textContent=features.length;
+  document.getElementById('error-count').textContent=features.filter(f=>f.properties.has_error).length;
+  for(const feature of features){
+    const p=feature.properties,row=element('button');row.type='button';row.className='poi-row';row.dataset.poiId=p.id;
+    row.append(element('strong',p.name),element('span',categories[p.category]+' · '+statuses[p.status]));
+    row.addEventListener('click',()=>{showDetail(feature);map.setView([feature.geometry.coordinates[1],feature.geometry.coordinates[0]],17);});
+    listNode.append(row);
+  }
+  if(features.length)showDetail(features[0]);
+  else{
+    listNode.append(element('p','没有符合筛选条件的点位。'));
+    detailNode.replaceChildren(element('h2','暂无点位'),element('p','可调整筛选条件，或使用手机采集新的POI。'));
+    ocrNode.replaceChildren();
+  }
+}
 async function load(){
   const ticket=++loadVersion,form=new FormData(filters),query=new URLSearchParams();
   for(const key of ['category','status'])if(form.get(key))query.set(key,form.get(key));
@@ -76,7 +101,8 @@ async function load(){
   try{
     const result=await request('/api/map?'+query.toString());if(ticket!==loadVersion)return;
     if(featuresLayer)map.removeLayer(featuresLayer);
-    featuresLayer=L.geoJSON(result,{pointToLayer:(feature,latlng)=>L.circleMarker(latlng,{radius:9,color:feature.properties.status==='under_arbitration'?'#b45309':feature.properties.has_error?'#b91c1c':feature.properties.status==='finalized'?'#15803d':'#1d4ed8',fillOpacity:.8}),onEachFeature:(feature,layer)=>layer.bindPopup(popup(feature))}).addTo(map);
+    featuresLayer=L.geoJSON(result,{pointToLayer:(feature,latlng)=>L.circleMarker(latlng,{radius:9,color:feature.properties.status==='under_arbitration'?'#b45309':feature.properties.has_error?'#b91c1c':feature.properties.status==='finalized'?'#15803d':'#1d4ed8',fillOpacity:.8}),onEachFeature:(feature,layer)=>{layer.bindPopup(popup(feature));if(detailNode)layer.on('click',()=>showDetail(feature));}}).addTo(map);
+    showList(result.features);
     if(result.features.length)map.fitBounds(featuresLayer.getBounds(),{padding:[25,25],maxZoom:16});
     notice.textContent='显示'+result.features.length+'个POI。';
   }catch(error){if(ticket===loadVersion)notice.textContent=error.message;}

@@ -27,8 +27,11 @@ class Settings:
     app_id: str = ''
     app_secret: str = ''
     database: str = 'data/check-collect.sqlite3'
+    wechat_mode: str = 'website'
 
     def __post_init__(self):
+        if self.wechat_mode not in ('website', 'official_account'):
+            raise ValueError('WECHAT_LOGIN_MODE须为website或official_account')
         p = urllib.parse.urlsplit(self.origin)
         if p.scheme not in ('http', 'https') or not p.hostname or p.username or p.password or p.path or p.query or p.fragment:
             raise ValueError('PUBLIC_ORIGIN须为不带路径的http(s)地址')
@@ -39,7 +42,12 @@ class Settings:
     def from_env(cls):
         return cls(os.getenv('PUBLIC_ORIGIN', 'http://127.0.0.1:8765').rstrip('/'),
                    os.getenv('WECHAT_APP_ID', ''), os.getenv('WECHAT_APP_SECRET', ''),
-                   os.getenv('CHECK_COLLECT_DB', 'data/check-collect.sqlite3'))
+                   os.getenv('CHECK_COLLECT_DB', 'data/check-collect.sqlite3'),
+                   os.getenv('WECHAT_LOGIN_MODE', 'website'))
+
+    @property
+    def wechat_login_label(self):
+        return '微信授权登录' if self.wechat_mode == 'official_account' else '微信扫码登录'
 
     @property
     def callback(self):
@@ -72,9 +80,11 @@ class WeChat:
     def authorization_url(self, state: str) -> str:
         if not self.settings.configured:
             raise AuthError('尚未配置微信应用，无法开始真实授权')
-        return 'https://open.weixin.qq.com/connect/qrconnect?' + urllib.parse.urlencode({
+        official = self.settings.wechat_mode == 'official_account'
+        endpoint = 'https://open.weixin.qq.com/connect/oauth2/authorize' if official else 'https://open.weixin.qq.com/connect/qrconnect'
+        return endpoint + '?' + urllib.parse.urlencode({
             'appid': self.settings.app_id, 'redirect_uri': self.settings.callback,
-            'response_type': 'code', 'scope': 'snsapi_login', 'state': state,
+            'response_type': 'code', 'scope': 'snsapi_base' if official else 'snsapi_login', 'state': state,
         }) + '#wechat_redirect'
 
     def identify(self, code: str) -> dict:
@@ -135,8 +145,8 @@ class Store:
         username = username.strip().casefold()
         if not (3 <= len(username) <= 40 and username.isascii() and all(c.isalnum() or c in '_-' for c in username)):
             raise AuthError('账号须为3—40位字母、数字、下划线或连字符')
-        if not 12 <= len(password) <= 128:
-            raise AuthError('密码须为12—128个字符')
+        if not 8 <= len(password) <= 128:
+            raise AuthError('密码须为8—128个字符')
         with self.connect() as db:
             db.execute('BEGIN IMMEDIATE')
             row = db.execute('SELECT * FROM credentials WHERE username=?', (username,)).fetchone()

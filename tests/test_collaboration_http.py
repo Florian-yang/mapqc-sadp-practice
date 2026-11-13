@@ -32,6 +32,24 @@ class Response:
 
 
 class CollaborationHTTPTests(unittest.TestCase):
+    def test_unread_badge_is_private_and_counts_beyond_the_list_limit(self):
+        from check_collect.events import queue_event
+        from check_collect.notifications import Notifications
+        notices=Notifications(self.store)
+        with self.store.connect() as db:
+            for _ in range(102):
+                event=queue_event(db,'system.notice',self.owner,{'text':'test'})
+                db.execute('INSERT INTO notification_inbox(event_id,recipient,event_type,payload,received_ms) VALUES(?,?,?,?,?)',
+                           (event,self.owner,'system.notice','{"text":"test"}',time.time()*1000))
+        self.assertEqual(self.request('GET','/api/notifications/unread').status,401)
+        self.assertEqual(self.request('GET','/api/notifications/unread',uid=self.owner).json(),{'count':102})
+        self.assertEqual(self.request('GET','/api/notifications/unread',uid=self.collector).json(),{'count':0})
+        response=self.request('POST',f'/notifications/{event}/read',uid=self.collector)
+        self.assertEqual(response.status,403)
+        self.assertEqual(notices.unread_count(self.owner),102)
+        self.assertEqual(self.request('POST',f'/notifications/{event}/read',uid=self.owner).status,303)
+        self.assertEqual(notices.unread_count(self.owner),101)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

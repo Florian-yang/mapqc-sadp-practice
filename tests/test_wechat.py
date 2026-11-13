@@ -5,6 +5,7 @@ import tempfile
 import threading
 import time
 import unittest
+from unittest.mock import patch
 from urllib.parse import urlsplit, parse_qs
 from http.cookies import SimpleCookie
 from http.server import ThreadingHTTPServer
@@ -41,6 +42,23 @@ class WeChatTests(unittest.TestCase):
         for response in [{'errcode':40029}, {}, {'openid':'x'}, {'openid':12,'access_token':'x'}]:
             with self.subTest(response=response):
                 with self.assertRaises(AuthError): WeChat(self.config,lambda u:response).identify('x')
+
+    def test_official_account_authorization_and_environment(self):
+        config = Settings('https://192.168.137.1:8443', 'test-app', 'TEST_ONLY_SECRET',
+                          self.config.database, 'official_account')
+        url = urlsplit(WeChat(config).authorization_url('browser-state'))
+        query = parse_qs(url.query)
+        self.assertEqual(url.path, '/connect/oauth2/authorize')
+        self.assertEqual(query['scope'], ['snsapi_base'])
+        self.assertEqual(query['redirect_uri'], [config.callback])
+        self.assertEqual(query['state'], ['browser-state'])
+        self.assertEqual(url.fragment, 'wechat_redirect')
+        self.assertNotIn('TEST_ONLY_SECRET', url.geturl())
+        self.assertEqual(config.wechat_login_label, '微信授权登录')
+        with patch.dict('os.environ', {'WECHAT_LOGIN_MODE':'official_account'}, clear=True):
+            self.assertEqual(Settings.from_env().wechat_mode, 'official_account')
+        with self.assertRaises(ValueError):
+            Settings(self.config.origin, wechat_mode='unknown')
 
     def test_state_bound_to_browser_and_single_use(self):
         s,b=self.store.start('login')
@@ -125,7 +143,11 @@ class WeChatTests(unittest.TestCase):
                     cookie=SimpleCookie(v)
                     jar.update({key:m.value for key,m in cookie.items()})
             return r.status,dict(headers),data
-        self.assertIn('微信扫码登录',request('GET','/')[2])
+        status,headers,page=request('GET','/')
+        self.assertIn('微信扫码登录',page)
+        policy=headers['Content-Security-Policy']
+        self.assertIn("form-action 'self' https://open.weixin.qq.com;",policy)
+        self.assertIn("script-src 'self';",policy)
         self.assertEqual(request('POST','/auth/wechat/login',False)[0],403)
         status,h,_=request('POST','/auth/wechat/login')
         self.assertEqual(status,303)

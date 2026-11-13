@@ -1,5 +1,9 @@
 # check@collect项目入口
 
+## 11月13日更新
+
+用户完成微信测试号真实绑定、微信直接登录及手机百度OCR识别，微信登录返回原账号并保留采集记录。新增电脑地图工作台、统一页面导航和未读通知铃铛。Windows入口见scripts/start_desktop.py和docs/desktop.md；复用现有数据库，不包含本机凭据、照片和证书。11月11日提交包保留原版，本次更新作为后续代码版本。
+
 ## 当前状态
 
 权威题干为docs/assignment-original.md，逐项状态见docs/requirements.md。11/9的1.0.0-rc.1历史候选版涵盖采集核验、私聊群聊、第三方异议、NATS通知、地图及OCR。11/9串联真实HTTP和NATS完成综合场景，地图/OCR协议在该场景注入；平台真实响应见11/8证据。

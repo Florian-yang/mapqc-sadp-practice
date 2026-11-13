@@ -32,6 +32,11 @@ class Notifications:
             return [{**dict(r),'payload':json.loads(r['payload'])} for r in db.execute(
                 'SELECT * FROM notification_inbox WHERE recipient=? ORDER BY received_ms DESC,event_id LIMIT 100',(uid,))]
 
+    def unread_count(self,uid):
+        if not uid: raise AuthError('请先登录')
+        with self.store.connect() as db:
+            return db.execute('SELECT COUNT(*) FROM notification_inbox WHERE recipient=? AND read_ms IS NULL',(uid,)).fetchone()[0]
+
     def mark_read(self,uid,event_id):
         if not uid or not isinstance(event_id,str) or not re.fullmatch('[a-f0-9]{32}',event_id): raise AuthError('通知不存在或无权访问')
         with self.store.connect() as db:
